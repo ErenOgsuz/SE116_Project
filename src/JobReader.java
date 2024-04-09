@@ -10,8 +10,7 @@ public class JobReader {
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
 
         int lineCount = 1;  // indicates the line read.
-        int jobCount = 0;
-        boolean isThereJob = false;
+        boolean isThereJob = false; 
         boolean isThereTask = false;
 
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
@@ -93,14 +92,14 @@ public class JobReader {
                                 if(isThereTask){
                                     boolean jobExist = false;
                                     for(Job job : jobs){
-                                        if(job.getJobID()==parts[i]){
+                                        if(job.getJobID().equals(parts[i])){
                                             jobExist = true;
+                                            break;
                                         }
                                     }
                                     if(!jobExist){
                                         jobs.add(new Job(parts[i],new ArrayList<Task>(jobTasks)));
                                         jobTasks.clear();
-                                        jobCount++;
                                     }else {
                                         alreadyDeclaredJob(lineCount,parts[i]);
                                     }
@@ -120,6 +119,10 @@ public class JobReader {
                 if (line.contains("STATIONS")) {
                     break;
                 }
+            }
+
+            if(!isThereJob){
+                noJob();
             }
 
             for (Job job : jobs) {
@@ -159,5 +162,8 @@ public class JobReader {
     }
     public static void noTask(int lineCount) throws Exception{
         throw new Exception("Line " + lineCount + ": There is no task given for job.");
+    }
+    public static void noJob() throws Exception{
+        throw new Exception("No job is given for JOBTYPE.");
     }
 }
