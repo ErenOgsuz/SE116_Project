@@ -10,13 +10,13 @@ public class JobReader {
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
 
         int lineCount = 1;  // indicates the line read.
-        boolean isThereJob = false; 
-        boolean isThereTask = false;
+        boolean isThereJob = false; // checks if any job is given
+        boolean isThereTask = false; // checks if any task is given for the job
 
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
 
-            while (true) {
+            while (true) { // Read line by line
                 line = br.readLine();
 
                 if(line.contains("JOBTYPES")){
@@ -25,11 +25,11 @@ public class JobReader {
                     controlBracket(lineCount, jobTypesIndex, openingParenthesisIndex,0);
                     lineCount++;
                     continue;
-                } else if (line.contains("J")) {
+                } else if (line.contains("J")) { // If line has J in it, it will start to create a Job object
                     isThereJob = true;
                     String[] parts =line.split(" ");
 
-                    for(int i = 0; i< parts.length; i++){
+                    for(int i = 0; i< parts.length; i++){ // Clean the Strings from empty space and parentheses
                         parts[i] = parts[i].trim();
                         if(parts[i].contains(")")){
                             parts[i] = parts[i].substring(0,parts[i].length()-1);
@@ -38,21 +38,21 @@ public class JobReader {
                             parts[i] = parts[i].substring(1);
                         }
                     }
-
+                    // Looks for every String in the line
                     for(int i=0; i< parts.length;i++) {
-                        if (parts[i].contains("J")) {
-                            if (parts[i].charAt(0) == 'J') {
+                        if (parts[i].contains("J")) { // Is job given
+                            if (parts[i].charAt(0) == 'J') { // Is jobID written correctly
                                 for(int j = 0; j<parts.length; j++){
-                                    if(parts[j].contains("T")){
+                                    if(parts[j].contains("T")){ // Looks for the tasks
                                         isThereTask = true;
                                         boolean taskExist = false;
                                         Task taskToAdd = new Task();
-                                        for(Task task : Main.taskTypes){
+                                        for(Task task : Main.taskTypes){ // Checks if task exist
                                             if(task.getTaskTypeID().equals(parts[j])){
                                                 taskExist = true;
 
                                                 if(j < parts.length-1 && !parts[j+1].contains("T")){
-                                                    if(task.getSize() == 0.0){
+                                                    if(task.getSize() == 0.0){ // Is task size given before
                                                         if(Double.parseDouble(parts[j+1]) == 0.0) {
                                                             noDefaultSize(lineCount, task.getTaskTypeID());
                                                         }else if(Double.parseDouble(parts[j+1]) >= 0){
@@ -61,7 +61,7 @@ public class JobReader {
                                                         }else{
                                                             incorrectDefaultSize(lineCount);
                                                         }
-                                                    }else if(task.getSize() != Double.parseDouble(parts[j+1])) {
+                                                    }else if(task.getSize() != Double.parseDouble(parts[j+1])) { // Is task size and new task same
                                                         if(Double.parseDouble(parts[j+1]) >= 0){
                                                             taskToAdd = new Task(parts[j]);
                                                             taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
@@ -70,7 +70,7 @@ public class JobReader {
                                                         }else if(Double.parseDouble(parts[j+1]) < 0){
                                                             incorrectDefaultSize(lineCount);
                                                         }
-                                                    }else{
+                                                    }else{ // Add task to Job
                                                         taskToAdd = task;
                                                     }
                                                 }else{
@@ -89,9 +89,9 @@ public class JobReader {
                                         }
                                     }
                                 }
-                                if(isThereTask){
+                                if(isThereTask){ // If there is a task add it to Job
                                     boolean jobExist = false;
-                                    for(Job job : jobs){
+                                    for(Job job : jobs){ // Is this jobID given before
                                         if(job.getJobID().equals(parts[i])){
                                             jobExist = true;
                                             break;
@@ -121,11 +121,11 @@ public class JobReader {
                 }
             }
 
-            if(!isThereJob){
+            if(!isThereJob){ // If no job given in JOBTYPE list
                 noJob();
             }
 
-            for (Job job : jobs) {
+            for (Job job : jobs) { // Prints jobs with their tasks
                 System.out.print(job.getJobID() + " ");
                 for(Task task : job.getTasks()){
                     System.out.print(task.getTaskTypeID() + " ");
@@ -138,6 +138,7 @@ public class JobReader {
         }
     }
 
+    // All the Exceptions written below
     public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
         if (bracketType == 0) {
             if (bracetIndex > controlIndex) {
