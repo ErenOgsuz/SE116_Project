@@ -4,6 +4,8 @@ import java.nio.file.Paths;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -15,38 +17,71 @@ public class Main {
 
         if (Files.exists(jobFilePathObject)) {
             System.out.println("The job file exist.");
+            if (Files.isReadable(jobFilePathObject)) {
+                System.out.println("The job file accessible.");
+            } else {
+                System.out.println("The job file does not accessible.");
+            }
         } else {
             System.out.println("The job file does not exist.");
         }
 
-        if (Files.isReadable(jobFilePathObject)) {
-            System.out.println("The job file accessible.");
-        } else {
-            System.out.println("The job file does not accessible.");
-        }
-
         if (Files.exists(workFlowFilePathObject)) {
             System.out.println("The WorkFlow file exist.");
+            if (Files.isReadable(workFlowFilePathObject)) {
+                System.out.println("The WorkFlow file accessible.");
+            } else {
+                System.out.println("The WorkFlow file does not accessible.");
+            }
         } else {
             System.out.println("The WorkFlow file does not exist.");
         }
 
-        if (Files.isReadable(workFlowFilePathObject)) {
-            System.out.println("The WorkFlow file accessible.");
-        } else {
-            System.out.println("The WorkFlow file does not accessible.");
-        }
-
-        int lineCount = 0;  // indicates the line read
-
-        String allText="";
+        int lineCount = 0;  // indicates the line read.
+        int taskCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath))) {
             String line = "";
 
-            while ((line = br.readLine()) != null) {
+            ArrayList<Task> taskTypes =new ArrayList<Task>();
+
+            while (true) {
+                line = br.readLine();
                 lineCount++;
-                allText=allText+" "+line;
+
+                String[] parts =line.split(" ");
+                if(parts[parts.length-1].contains(")")){
+                    parts[parts.length-1] = parts[parts.length-1].substring(0,parts[parts.length-1].length()-1);
+                }
+
+                for(int i=1; i< parts.length;i++) {
+                    if (!parts[i].contains("J")) {
+                        if (parts[i].contains("T")) {
+                            if (parts[i].charAt(0) == 'T') {
+                                    taskTypes.add(new Task(parts[i]));
+                                    taskCount++;
+                            }else{
+                                incorrectTaskType(lineCount);
+                            }
+                        }else{
+                           if(taskCount > 0){
+                                if (taskTypes.get(taskCount - 1).getTaskTypeID().equals(parts[i-1])) {
+                                    if (Double.parseDouble(parts[i]) >= 0.0) {
+                                        taskTypes.get(taskCount - 1).setSize(Double.parseDouble(parts[i]));
+                                    } else {
+                                        incorrectDefaultSize(lineCount);
+                                    }
+                                }else{
+                                    noTask(lineCount);
+                                }
+                            }else{
+                                noTask(lineCount);
+                            }
+                        }
+                    } else {
+                        break;
+                    }
+                }
 
                 int taskTypesIndex = line.indexOf("TASKTYPES");
 
@@ -55,24 +90,20 @@ public class Main {
                     controlBracket(lineCount, taskTypesIndex, openingParenthesisIndex,0);
                 }
 
+                if (line.contains("J")) {
+                    break;
+                }
+
+            }
+            for (int i = 0; i < taskTypes.size(); i++) {
+                System.out.println(taskTypes.get(i).getTaskTypeID()+ " "+taskTypes.get(i).getSize() );
             }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
 
-        String[] parts =allText.split(" ");
 
-        for(int i=2; i< parts.length;i++) {
-            if (!parts[i].contains("J")) {
-                // add to possible task types.
-                System.out.println(parts[i]);
-            } else {
-                break;
-            }
-        }
     }
-
-
     public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
         if (bracketType == 0) {
             if (bracetIndex > controlIndex) {
@@ -85,4 +116,14 @@ public class Main {
 
         }
     }
+    public static void incorrectTaskType(int lineCount) throws Exception{
+        throw new Exception("Line" + lineCount + ": There is an invalid type of task.");
+    }
+    public static void incorrectDefaultSize(int lineCount) throws Exception{
+        throw new Exception("Line" + lineCount + ": There is an invalid default size.");
+    }
+    public static void noTask(int lineCount) throws Exception{
+        throw new Exception("Line" + lineCount + ": There is no task for a default size.");
+    }
+
 }

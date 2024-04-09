@@ -20,4 +20,5 @@ public class Job {
         this.deadline = deadline;
         this.status = status;
     }
+    public Job(){}
 }

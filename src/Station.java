@@ -5,6 +5,8 @@ public class Station {
     private int maxCapacity;
     private boolean multiFlag;
     private boolean fifoFlag;
+    private boolean state;
+    private int speed;
     private ArrayList<Task> tasks;
 
     public Station(int stationID, int maxCapacity, boolean multiFlag, boolean fifoFlag, ArrayList<Task> tasks) {
@@ -13,5 +15,9 @@ public class Station {
         this.fifoFlag = fifoFlag;
         this.multiFlag = multiFlag;
         this.tasks = tasks;
+    }
+
+    public Station(){
+
     }
 }
