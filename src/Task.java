@@ -9,6 +9,9 @@ public class Task {
         this.station=new Station();
     }
 
+    public Task() {
+    }
+
     public String getTaskTypeID() {
         return taskTypeID;
     }

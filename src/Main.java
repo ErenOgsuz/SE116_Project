@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main {
+    protected static ArrayList<Task> taskTypes =new ArrayList<Task>();
 
     public static void main(String[] args) {
         String jobFilePath = "JobFile.txt"; // The path of Job file
@@ -40,10 +41,9 @@ public class Main {
         int lineCount = 0;  // indicates the line read.
         int taskCount = 0;
 
+
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath))) {
             String line = "";
-
-            ArrayList<Task> taskTypes =new ArrayList<Task>();
 
             while (true) {
                 line = br.readLine();
@@ -102,6 +102,7 @@ public class Main {
             exception.printStackTrace();
         }
 
+        JobReader.readJobs();
 
     }
     public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {

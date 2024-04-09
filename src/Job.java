@@ -8,12 +8,9 @@ public class Job {
     private int taskIndex;
     private int deadline;
 
-    public Job(String jobID, int startTime, ArrayList<Task> tasks, int taskIndex, int deadline) {
+    public Job(String jobID, ArrayList<Task> tasks) {
         this.jobID = jobID;
-        this.startTime = startTime;
         this.tasks = tasks;
-        this.taskIndex = taskIndex;
-        this.deadline = deadline;
     }
 
     public void setDuration(int duration) {
@@ -22,6 +19,14 @@ public class Job {
 
     public int getDuration() {
         return duration;
+    }
+
+    public String getJobID() {
+        return jobID;
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 
     public Job(){}
