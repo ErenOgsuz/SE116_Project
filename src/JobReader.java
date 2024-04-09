@@ -34,7 +34,8 @@ public class JobReader {
                         parts[i] = parts[i].trim();
                         if(parts[i].contains(")")){
                             parts[i] = parts[i].substring(0,parts[i].length()-1);
-                        }else if(parts[i].contains("(")){
+                        }
+                        if(parts[i].contains("(")){
                             parts[i] = parts[i].substring(1);
                         }
                     }
@@ -42,21 +43,50 @@ public class JobReader {
                     for(int i=0; i< parts.length;i++) {
                         if (parts[i].contains("J")) {
                             if (parts[i].charAt(0) == 'J') {
-                                for(String part : parts){
-                                    if(part.contains("T")){
+                                for(int j = 0; j<parts.length; j++){
+                                    if(parts[j].contains("T")){
                                         isThereTask = true;
                                         boolean taskExist = false;
                                         Task taskToAdd = new Task();
                                         for(Task task : Main.taskTypes){
-                                            if(task.getTaskTypeID().equals(part)){
+                                            if(task.getTaskTypeID().equals(parts[j])){
                                                 taskExist = true;
-                                                taskToAdd = task;
+
+                                                if(j < parts.length-1 && !parts[j+1].contains("T")){
+                                                    if(task.getSize() == 0.0){
+                                                        if(Double.parseDouble(parts[j+1]) == 0.0) {
+                                                            noDefaultSize(lineCount, task.getTaskTypeID());
+                                                        }else if(Double.parseDouble(parts[j+1]) >= 0){
+                                                            taskToAdd = new Task(parts[j]);
+                                                            taskToAdd.setSize(Double.parseDouble(parts[j+1]));
+                                                        }else{
+                                                            incorrectDefaultSize(lineCount);
+                                                        }
+                                                    }else if(task.getSize() != Double.parseDouble(parts[j+1])) {
+                                                        if(Double.parseDouble(parts[j+1]) >= 0){
+                                                            taskToAdd = new Task(parts[j]);
+                                                            taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
+                                                        }else if(Double.parseDouble(parts[j+1]) == 0.0){
+                                                            taskToAdd = task;
+                                                        }else if(Double.parseDouble(parts[j+1]) < 0){
+                                                            incorrectDefaultSize(lineCount);
+                                                        }
+                                                    }else{
+                                                        taskToAdd = task;
+                                                    }
+                                                }else{
+                                                    if(task.getSize() == 0.0){
+                                                        noDefaultSize(lineCount, task.getTaskTypeID());
+                                                    }else{
+                                                        taskToAdd = task;
+                                                    }
+                                                }
                                             }
                                         }
                                         if(taskExist){
                                             jobTasks.add(taskToAdd);
                                         }else{
-                                            nonDeclaredTask(lineCount,part);
+                                            nonDeclaredTask(lineCount,parts[j]);
                                         }
                                     }
                                 }
@@ -77,6 +107,7 @@ public class JobReader {
                                 }else{
                                     noTask(lineCount);
                                 }
+                                isThereTask = false;
                             }else{
                                 System.out.println("JobID is not written correctly!");
                             }
@@ -90,8 +121,6 @@ public class JobReader {
                     break;
                 }
             }
-
-
 
             for (Job job : jobs) {
                 System.out.print(job.getJobID() + " ");
