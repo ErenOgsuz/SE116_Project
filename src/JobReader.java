@@ -104,11 +104,11 @@ public class JobReader {
                                         alreadyDeclaredJob(lineCount,parts[i]);
                                     }
                                 }else{
-                                    noTask(lineCount);
+                                    noTask(lineCount); // Throws exception if there is no Task
                                 }
                                 isThereTask = false;
                             }else{
-                                System.out.println("JobID is not written correctly!");
+                                jobIDisWrong(lineCount); // Throws exception if JobID is not right
                             }
                         }
                     }
@@ -166,5 +166,8 @@ public class JobReader {
     }
     public static void noJob() throws Exception{
         throw new Exception("No job is given for JOBTYPE.");
+    }
+    public static void jobIDisWrong(int lineCount) throws Exception{
+        throw new Exception("Line " + lineCount + ": JobID is written wrong, write \"J\" first then give number");
     }
 }
