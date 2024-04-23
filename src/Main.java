@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Main {
     protected static ArrayList<Task> taskTypes =new ArrayList<Task>();
+    protected static ArrayList<Job> jobTypes =new ArrayList<Job>();
 
     public static void main(String[] args) {
         String jobFilePath = "JobFile.txt"; // The path of Job file
@@ -35,8 +36,8 @@ public class Main {
             System.out.println("The WorkFlow file does not exist.");
         }
 
-        //TaskReader.readTasks();
-        //JobReader.readJobs();
+        TaskReader.readTasks();
+        JobReader.readJobs();
         StationReader.readStations();
     }
 
