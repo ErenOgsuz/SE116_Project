@@ -2,6 +2,7 @@ public class Task {
     private String taskTypeID;
     private double size;
     private Station station;
+    private int speed;
 
     public Task(String taskTypeID){
         this.taskTypeID=taskTypeID;
