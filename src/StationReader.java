@@ -13,7 +13,7 @@ public class StationReader {
         int stationCount = 0;
         boolean isThereStation = false;
         boolean isThereTask = false;
-
+        boolean multiflag = false;
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
             while (true) {
@@ -23,6 +23,19 @@ public class StationReader {
                     int stationTypesIndex = line.indexOf("STATIONS");
                     int openingParenthesisIndex = line.indexOf("(");
                     controlBracket(lineCount, stationTypesIndex, openingParenthesisIndex,0);
+                    lineCount++;
+                    continue;
+                }
+                else if (line.contains("MULTIFLAG")) {
+                    String[] parts = line.split(" ");
+                    if (parts.length >= 2) {
+                        String flag = parts[2].trim().toUpperCase();
+                        if (flag.equals("Y")) {
+                            isMultipleTasks(multiflag, true);
+                        } else if (flag.equals("N")) {
+                            isMultipleTasks(multiflag, false);
+                        }
+                    }
                     lineCount++;
                     continue;
                 }
@@ -143,6 +156,9 @@ public class StationReader {
             exception.printStackTrace();
         }
 
+    }
+    public static void isMultipleTasks(boolean multiflag, boolean result) {
+        multiflag = result;
     }
     public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
         if (bracketType == 0) {
