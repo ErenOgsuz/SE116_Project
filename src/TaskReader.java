@@ -29,16 +29,16 @@ public class TaskReader {
                     if (!parts[i].contains("J")) {
                         if (parts[i].contains("T")) {
                             if (parts[i].charAt(0) == 'T') {
-                                taskTypes.add(new Task(parts[i]));
+                                Main.taskTypes.add(new Task(parts[i]));
                                 taskCount++;
                             }else{
                                 incorrectTaskType(lineCount);
                             }
                         }else{
                             if(taskCount > 0){
-                                if (taskTypes.get(taskCount - 1).getTaskTypeID().equals(parts[i-1])) {
+                                if (Main.taskTypes.get(taskCount - 1).getTaskTypeID().equals(parts[i-1])) {
                                     if (Double.parseDouble(parts[i]) >= 0.0) {
-                                        taskTypes.get(taskCount - 1).setSize(Double.parseDouble(parts[i]));
+                                        Main.taskTypes.get(taskCount - 1).setSize(Double.parseDouble(parts[i]));
                                     } else {
                                         incorrectDefaultSize(lineCount);
                                     }
