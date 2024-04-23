@@ -9,16 +9,12 @@ public class Station {
     private int speed;
     private ArrayList<Task> tasks;
 
-    public Station(int stationID, int maxCapacity, boolean multiFlag, boolean fifoFlag, ArrayList<Task> tasks) {
-        this.stationID = stationID;
-        this.maxCapacity = maxCapacity;
-        this.fifoFlag = fifoFlag;
-        this.multiFlag = multiFlag;
-        this.tasks = tasks;
-    }
     public Station(int stationID, ArrayList<Task> tasks){
         this.stationID = stationID;
         this.tasks = tasks;
+    }
+
+    public Station() {
     }
 
     public int getStationID() {

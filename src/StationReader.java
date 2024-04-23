@@ -16,6 +16,7 @@ public class StationReader {
         boolean multiflag = false;
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
+            boolean isStation = false;
             while (true) {
                 line = br.readLine();
 
@@ -24,33 +25,35 @@ public class StationReader {
                     int openingParenthesisIndex = line.indexOf("(");
                     controlBracket(lineCount, stationTypesIndex, openingParenthesisIndex,0);
                     lineCount++;
+                    isStation = true;
                     continue;
                 }
-                else if (line.contains("MULTIFLAG")) {
-                    String[] parts = line.split(" ");
-                    if (parts.length >= 2) {
-                        String flag = parts[2].trim().toUpperCase();
-                        if (flag.equals("Y")) {
-                            isMultipleTasks(multiflag, true);
-                        } else if (flag.equals("N")) {
-                            isMultipleTasks(multiflag, false);
-                        }
-                    }
-                    lineCount++;
-                    continue;
-                }
-                else if (line.contains("S")) {
+
+                if (line.contains("S") && isStation) {
                     isThereStation = true;
                     String[] parts =line.split(" ");
 
                     for (int i = 0; i< parts.length; i++){
                         parts[i] = parts[i].trim();
+                        System.out.println(parts[i]);
                         if(parts[i].contains(")")){
                             parts[i] = parts[i].substring(0,parts[i].length()-1); //To distinguish station from ')'
                         }
                         if(parts[i].contains("(")){
                             parts[i] = parts[i].substring(1); //To distinguish station from '('
                         }
+                    }
+
+                    if (line.contains("N") || line.contains("Y")) {
+                        if (parts.length >= 2) {
+                            String flag = parts[2].toUpperCase();
+                            if (flag.equals("Y")) {
+                                isMultipleTasks(multiflag, true);
+                            } else if (flag.equals("N")) {
+                                isMultipleTasks(multiflag, false);
+                            }
+                        }
+                        continue;
                     }
 
                     for (int i = 0; i < parts.length;i++) {
@@ -139,7 +142,9 @@ public class StationReader {
 
                 lineCount++;
 
-                if (!line.contains("STATIONS")) {
+
+                if (!line.contains("S")||!line.contains("J")|!line.contains("STATIONS")||!line.contains("T")||!line.contains("JOB")||!line.contains("TASK")) {
+                    // End of file reached, exit the loop
                     break;
                 }
             }
