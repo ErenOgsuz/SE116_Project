@@ -20,6 +20,11 @@ public class StationReader {
             while (true) {
                 line = br.readLine();
 
+                if (line == null) {
+                    // End of file reached, exit the loop
+                    break;
+                }
+
                 if (line.contains("STATIONS")){
                     int stationTypesIndex = line.indexOf("STATIONS");
                     int openingParenthesisIndex = line.indexOf("(");
@@ -35,25 +40,25 @@ public class StationReader {
 
                     for (int i = 0; i< parts.length; i++){
                         parts[i] = parts[i].trim();
-                        System.out.println(parts[i]);
                         if(parts[i].contains(")")){
                             parts[i] = parts[i].substring(0,parts[i].length()-1); //To distinguish station from ')'
                         }
                         if(parts[i].contains("(")){
                             parts[i] = parts[i].substring(1); //To distinguish station from '('
                         }
+
+                        //System.out.println(parts[i]);
                     }
 
                     if (line.contains("N") || line.contains("Y")) {
                         if (parts.length >= 2) {
                             String flag = parts[2].toUpperCase();
                             if (flag.equals("Y")) {
-                                isMultipleTasks(multiflag, true);
+                                multiflag = true;
                             } else if (flag.equals("N")) {
-                                isMultipleTasks(multiflag, false);
+                                multiflag = false;
                             }
                         }
-                        continue;
                     }
 
                     for (int i = 0; i < parts.length;i++) {
@@ -117,12 +122,12 @@ public class StationReader {
                                 if(isThereTask){
                                     boolean stationExist = false;
                                     for(Station station : stations){
-                                        if (Integer.toString(station.getStationID()).equals(parts[i])) {
+                                        if (station.getStationID().equals(parts[i])) {
                                             stationExist = true;
                                         }
                                     }
                                     if(!stationExist){
-                                        stations.add(new Station(Integer.parseInt(parts[i]),new ArrayList<Task>(stationTasks)));
+                                        stations.add(new Station(parts[i],new ArrayList<Task>(stationTasks)));
                                         stationTasks.clear();
                                         stationCount++;
                                     }else {
@@ -134,19 +139,15 @@ public class StationReader {
                                 isThereTask = false;
                             }
                             else {
-                                System.out.println("Station ID is not written correctly!");
+                                System.out.println("Call");
+
+                                stationIDisWrong(lineCount);
                             }
                         }
                     }
                 }
-
                 lineCount++;
 
-
-                if (!line.contains("S")||!line.contains("J")|!line.contains("STATIONS")||!line.contains("T")||!line.contains("JOB")||!line.contains("TASK")) {
-                    // End of file reached, exit the loop
-                    break;
-                }
             }
 
             for (Station station : stations) {
@@ -161,9 +162,6 @@ public class StationReader {
             exception.printStackTrace();
         }
 
-    }
-    public static void isMultipleTasks(boolean multiflag, boolean result) {
-        multiflag = result;
     }
     public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
         if (bracketType == 0) {
@@ -189,5 +187,8 @@ public class StationReader {
     }
     public static void noTask(int lineCount) throws Exception{
         throw new Exception("Line " + lineCount + ": There is no task given for job.");
+    }
+    public static void stationIDisWrong(int lineCount) throws Exception{
+        throw new Exception("Line " + lineCount + ": StationID is written wrong, write \"S\" first then give number");
     }
 }
