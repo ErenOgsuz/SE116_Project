@@ -1,13 +1,16 @@
+import java.time.LocalTime;
+
 public class Task {
     private String taskTypeID;
     private double size;
     private Station station;
-    private int speed;
+    private double duration;
+
+    private LocalTime startTime;
 
     public Task(String taskTypeID){
         this.taskTypeID=taskTypeID;
         this.size=0.0;
-        this.station=new Station();
     }
 
     public Task() {
@@ -36,4 +39,12 @@ public class Task {
     public void setStation(Station station) {
         this.station = station;
     }
+
+    public double getDuration() {return duration;}
+
+    public void setDuration(double duration) {this.duration = duration;}
+    public LocalTime getStartTime() {return startTime;}
+
+    public void setStartTime(LocalTime startTime) {this.startTime = startTime;}
+
 }

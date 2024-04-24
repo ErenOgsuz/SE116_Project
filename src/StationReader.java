@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class StationReader {
     public static void readStations() {
-        ArrayList<Station> stations = new ArrayList<Station>();
         ArrayList<Task> stationTasks = new ArrayList<Task>();
 
         String workFlowFilePath = "WorkFlow.txt";
@@ -121,13 +120,13 @@ public class StationReader {
                                 }
                                 if(isThereTask){
                                     boolean stationExist = false;
-                                    for(Station station : stations){
+                                    for(Station station : Main.stationsTypes){
                                         if (station.getStationID().equals(parts[i])) {
                                             stationExist = true;
                                         }
                                     }
                                     if(!stationExist){
-                                        stations.add(new Station(parts[i],new ArrayList<Task>(stationTasks)));
+                                        Main.stationsTypes.add(new Station(parts[i],new ArrayList<Task>(stationTasks)));
                                         stationTasks.clear();
                                         stationCount++;
                                     }else {
@@ -150,7 +149,7 @@ public class StationReader {
 
             }
 
-            for (Station station : stations) {
+            for (Station station : Main.stationsTypes) {
                 System.out.print(station.getStationID() + " ");
                 for(Task task : station.getTasks()){
                     System.out.print(task.getTaskTypeID() + " ");
