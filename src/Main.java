@@ -8,14 +8,11 @@ public class Main {
     protected static ArrayList<Task> taskTypes =new ArrayList<Task>();
     protected static ArrayList<JobType> jobTypes =new ArrayList<JobType>();
     protected static ArrayList<Station> stationsTypes = new ArrayList<Station>();
+    protected static ArrayList<Job> jobs = new ArrayList<Job>();
 
     public static void main(String[] args) {
         String jobFilePath = "JobFile.txt"; // The path of Job file
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
-
-        String filename = "JobFile.txt"; // Example filename, replace with your actual filename
-
-        List<Job> jobList = JobFileReader.readJobsFromFile(filename);
 
         Path jobFilePathObject = Paths.get(jobFilePath);
         Path workFlowFilePathObject = Paths.get(workFlowFilePath);
@@ -45,5 +42,6 @@ public class Main {
         TaskReader.readTasks();
         JobReader.readJobs();
         StationReader.readStations();
+        JobFileReader.readJobsFromFile();
     }
 }

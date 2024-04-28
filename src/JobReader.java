@@ -13,7 +13,7 @@ public class JobReader {
         boolean isThereJob = false; // checks if any job is given
         boolean isThereTask = false; // checks if any task is given for the job
 
-        try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
+        try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath))) {
             String line = "";
 
             while (true) { // Read line by line

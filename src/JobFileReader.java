@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 public class JobFileReader {
-    public static List<Job> readJobsFromFile(String filename) {
-        List<Job> jobList = new ArrayList<>();
+    public static void readJobsFromFile() {
+        String jobFilePath = "JobFile.txt"; // The path of Job file
+        ArrayList<Job> jobList = new ArrayList<>();
         Set<String> jobIds = new HashSet<>();
         int lineNumber = 1;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(jobFilePath))) {
             // Step 2: Read the file line by line
             String line;
             while ((line = br.readLine()) != null) {
@@ -21,8 +22,7 @@ public class JobFileReader {
 
                 // Step 4: Check for syntax errors
                 if (tokens.length != 4) {
-                    System.err.printf("Syntax error on line %d: expected 4 values, found %d%n", lineNumber, tokens.length);
-                    continue;
+                    syntaxError(lineNumber, tokens);
                 }
 
                 // Step 5: Extract job ID, job type ID, start time, and duration
@@ -33,32 +33,19 @@ public class JobFileReader {
 
                 // Step 6: Check for semantic errors
                 if (!jobIds.add(jobId)) {
-                    System.err.printf("Semantic error on line %d: duplicate job ID '%s'%n", lineNumber, jobId);
-                    continue;
+                    duplicateJobID(lineNumber,jobId);
                 }
 
-                try {
-                    startTime = Integer.parseInt(tokens[2]);
-                } catch (NumberFormatException e) {
-                    System.err.printf("Semantic error on line %d: invalid start time '%s'%n", lineNumber, tokens[2]);
-                    continue;
-                }
+                startTime = Integer.parseInt(tokens[2]);
 
                 if (startTime < 0) {
-                    System.err.printf("Semantic error on line %d: negative start time '%d'%n", lineNumber, startTime);
-                    continue;
+                    negativeStartTime(lineNumber,startTime);
                 }
 
-                try {
-                    duration = Integer.parseInt(tokens[3]);
-                } catch (NumberFormatException e) {
-                    System.err.printf("Semantic error on line %d: invalid duration '%s'%n", lineNumber, tokens[3]);
-                    continue;
-                }
+                duration = Integer.parseInt(tokens[3]);
 
                 if (duration < 0) {
-                    System.err.printf("Semantic error on line %d: negative duration '%d'%n", lineNumber, duration);
-                    continue;
+                    negativeDuration(lineNumber,duration);
                 }
 
                 // Step 7: Create a Job object
@@ -73,12 +60,28 @@ public class JobFileReader {
 
                 lineNumber++;
             }
-        } catch (IOException e) {
+        }catch (NumberFormatException e){
+                System.err.printf("Semantic error on line %d: invalid input", lineNumber);
+
+        } catch (Exception e) {
             System.err.println("Error reading file: " + e.getMessage());
             // Handle the error appropriately
         }
 
         // Return the list of Job objects
-        return jobList;
+        Main.jobs = jobList;
+    }
+
+    public static void syntaxError(int lineCount, String[] tokens) throws Exception{
+        throw new Exception("Syntax error on line " +  lineCount + ": expected 4 values, found " +  tokens.length);
+    }
+    public static void duplicateJobID(int lineCount, String jobId) throws Exception{
+        throw new Exception("Semantic error on line " +  lineCount + ": duplicate job ID " +  jobId);
+    }
+    public static void negativeStartTime(int lineCount, int startTime) throws Exception{
+        throw new Exception("Semantic error on line " +  lineCount + ": negative start time " +  startTime);
+    }
+    public static void negativeDuration(int lineCount, int duration) throws Exception{
+        throw new Exception("Semantic error on line " +  lineCount + ": negative duration " +  duration);
     }
 }
