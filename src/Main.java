@@ -15,14 +15,7 @@ public class Main {
 
         String filename = "JobFile.txt"; // Example filename, replace with your actual filename
 
-        // Create an instance of the JobFileReader class
-        JobFileReader jobFileReader = new JobFileReader();
-    
-        // Step 8: Call the readJobsFromFile method to get the list of Job objects
-        List<Job> jobList = jobFileReader.readJobsFromFile(filename);
-    
-        // Do something with the jobList, such as printing its size
-        System.out.println("Number of jobs: " + jobList.size());
+        List<Job> jobList = JobFileReader.readJobsFromFile(filename);
 
         Path jobFilePathObject = Paths.get(jobFilePath);
         Path workFlowFilePathObject = Paths.get(workFlowFilePath);
@@ -52,8 +45,5 @@ public class Main {
         TaskReader.readTasks();
         JobReader.readJobs();
         StationReader.readStations();
-
-        
     }
-
 }

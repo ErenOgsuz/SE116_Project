@@ -44,15 +44,4 @@ public class JobFileReader {
         // Return the list of Job objects
         return jobList;
     }
-
-    public static void main(String[] args) {
-        // Step 1: Open the job file for reading using BufferedReader
-        String filename = "jobs.txt"; // Example filename, replace with your actual filename
-
-        // Step 8: Call the readJobsFromFile method to get the list of Job objects
-        List<Job> jobList = readJobsFromFile(filename);
-
-        // Do something with the jobList, such as printing its size
-        System.out.println("Number of jobs: " + jobList.size());
-    }
 }
