@@ -1,15 +1,15 @@
 import java.util.ArrayList;
 
-public class Job {
-    private String jobID;
+public class JobType {
+    private String jobTypeID;
     private int startTime;
     private int duration;
     private ArrayList<Task> tasks;
     private int taskIndex;
     private int deadline;
 
-    public Job(String jobID, ArrayList<Task> tasks) {
-        this.jobID = jobID;
+    public JobType(String jobID, ArrayList<Task> tasks) {
+        this.jobTypeID = jobID;
         this.tasks = tasks;
     }
 
@@ -22,12 +22,12 @@ public class Job {
     }
 
     public String getJobID() {
-        return jobID;
+        return jobTypeID;
     }
 
     public ArrayList<Task> getTasks() {
         return tasks;
     }
 
-    public Job(){}
+    public JobType(){}
 }

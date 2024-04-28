@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Main {
     protected static ArrayList<Task> taskTypes =new ArrayList<Task>();
-    protected static ArrayList<Job> jobTypes =new ArrayList<Job>();
+    protected static ArrayList<JobType> jobTypes =new ArrayList<JobType>();
     protected static ArrayList<Station> stationsTypes = new ArrayList<Station>();
 
     public static void main(String[] args) {

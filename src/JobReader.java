@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class JobReader {
     public static void readJobs(){
-        ArrayList<Job> jobs = new ArrayList<Job>();
+        ArrayList<JobType> jobs = new ArrayList<JobType>();
         ArrayList<Task> jobTasks = new ArrayList<Task>();
 
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
@@ -91,14 +91,14 @@ public class JobReader {
                                 }
                                 if(isThereTask){ // If there is a task add it to Job
                                     boolean jobExist = false;
-                                    for(Job job : Main.jobTypes){ // Is this jobID given before
+                                    for(JobType job : Main.jobTypes){ // Is this jobID given before
                                         if(job.getJobID().equals(parts[i])){
                                             jobExist = true;
                                             break;
                                         }
                                     }
                                     if(!jobExist){
-                                        Main.jobTypes.add(new Job(parts[i],new ArrayList<Task>(jobTasks)));
+                                        Main.jobTypes.add(new JobType(parts[i],new ArrayList<Task>(jobTasks)));
                                         jobTasks.clear();
                                     }else {
                                         alreadyDeclaredJob(lineCount,parts[i]);
@@ -125,7 +125,7 @@ public class JobReader {
                 noJob();
             }
 
-            for (Job job : Main.jobTypes) { // Prints jobs with their tasks
+            for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
                 System.out.print(job.getJobID() + " ");
                 for(Task task : job.getTasks()){
                     System.out.print(task.getTaskTypeID() + " ");
