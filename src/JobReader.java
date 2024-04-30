@@ -1,11 +1,14 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+
 public class JobReader {
     public static void readJobs(){
         ArrayList<JobType> jobs = new ArrayList<JobType>();
         ArrayList<Task> jobTasks = new ArrayList<Task>();
+
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
+
         int lineCount = 1;  // indicates the line read.
         boolean isThereJob = false; // checks if any job is given
         boolean isThereTask = false; // checks if any task is given for the job
@@ -14,8 +17,8 @@ public class JobReader {
             String line = "";
 
             while (true) { // Read line by line
-
                 line = br.readLine();
+
                 if(line.contains("JOBTYPES")){
                     int jobTypesIndex = line.indexOf("JOBTYPES");
                     int openingParenthesisIndex = line.indexOf("(");
@@ -25,6 +28,7 @@ public class JobReader {
                 } else if (line.contains("J")) { // If line has J in it, it will start to create a Job object
                     isThereJob = true;
                     String[] parts =line.split(" ");
+
                     for(int i = 0; i< parts.length; i++){ // Clean the Strings from empty space and parentheses
                         parts[i] = parts[i].trim();
                         if(parts[i].contains(")")){
@@ -46,6 +50,7 @@ public class JobReader {
                                         for(Task task : Main.taskTypes){ // Checks if task exist
                                             if(task.getTaskTypeID().equals(parts[j])){
                                                 taskExist = true;
+
                                                 if(j < parts.length-1 && !parts[j+1].contains("T")){
                                                     if(task.getSize() == 0.0){ // Is task size given before
                                                         if(Double.parseDouble(parts[j+1]) == 0.0) {
@@ -108,14 +113,18 @@ public class JobReader {
                         }
                     }
                 }
+
                 lineCount++;
+
                 if (line.contains("STATIONS")) {
                     break;
                 }
             }
+
             if(!isThereJob){ // If no job given in JOBTYPE list
                 noJob();
             }
+
             for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
                 System.out.print(job.getJobID() + " ");
                 for(Task task : job.getTasks()){
@@ -123,10 +132,12 @@ public class JobReader {
                 }
                 System.out.println();
             }
+
         } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
+
     // All the Exceptions written below
     public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
         if (bracketType == 0) {
@@ -135,6 +146,7 @@ public class JobReader {
             } else if (bracetIndex == -1) {
                 throw new Exception("Line " + lineCount + ": There is no '(' at correct place. ");
             }
+
         }
     }
     public static void alreadyDeclaredJob(int lineCount, String jobID) throws Exception{
