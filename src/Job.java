@@ -1,33 +1,105 @@
-import java.util.ArrayList;
+import java.time.LocalTime;
+import java.time.Duration;
 
 public class Job {
-    private String jobID;
-    private int startTime;
-    private int duration;
-    private ArrayList<Task> tasks;
-    private int taskIndex;
-    private int deadline;
+    private final String jobId;
+    private final JobType jobTypeId; // "Has-a"jobType
+    private final LocalTime startTime;
+    private final Duration duration;
+    private final LocalTime deadline;
+    private String state;
+    private Task executingTask;
+    private Task waitingToExecute;
+    private Duration delayTime;
 
-    public Job(String jobID, ArrayList<Task> tasks) {
-        this.jobID = jobID;
-        this.tasks = tasks;
+    public Job(String jobId, JobType jobTypeId, int startTime, int duration) {
+        this.jobId = jobId;
+        this.jobTypeId = jobTypeId;
+
+        this.startTime = LocalTime.of(startTime / 60, startTime % 60);
+
+        int minute = duration / 60; // calculate minutes
+        int second = duration % 60; // calculate seconds
+
+        Duration durationToAdd = Duration.ofMinutes(minute).plusSeconds(second);
+
+        this.duration = durationToAdd;
+        this.deadline = this.startTime.plus(durationToAdd);
+        this.state="Waiting..";
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    // Getter methods
+    public String getJobId() {
+        return jobId;
     }
 
-    public int getDuration() {
+    public JobType getJobTypeId() {
+        return jobTypeId;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public Duration getDuration() {
         return duration;
     }
 
-    public String getJobID() {
-        return jobID;
+    public LocalTime getDeadline(){
+        return deadline;
     }
 
-    public ArrayList<Task> getTasks() {
-        return tasks;
+    public void setState(LocalTime time) {
+        if(time.isBefore(getStartTime())){
+            this.state="Waiting..";
+        }else{
+            this.state="Executing..";
+        }
+        int countDone=0;
+        for(Task task:jobTypeId.getTasks()){
+            if(task.getState().contains("Done.")){
+                countDone++;
+            }
+        }
+        if(countDone==jobTypeId.getTasks().size()){
+            state="Done.";
+        }
     }
 
-    public Job(){}
+    public String getState(){
+        return state;
+    }
+
+    public void setExecutingTask(){
+        for(Task task:jobTypeId.getTasks()){
+            if(task.getState().contains("Executing..")){
+                executingTask=task;
+                break;
+            }
+        }
+    }
+    public Task getExecutingTask(){
+        return executingTask;
+    }
+
+    public void setWaitingToExecute(){
+        int size = jobTypeId.getTasks().size();
+        for (int i = 0; i < size; i++) {
+            Task task = jobTypeId.getTasks().get(i);
+            if (task.getState().contains("Executing..")) {
+                waitingToExecute =jobTypeId.getTasks().get(i+1) ;
+                break;
+            }
+        }
+    }
+
+    public Task getWaitingToExecute(){
+        return waitingToExecute;
+    }
+
+    public Duration getDelayTime(){
+        delayTime = Duration.between(getStartTime(), jobTypeId.getTasks().getLast().getFinishTime());
+        return delayTime;
+    }
+
 }

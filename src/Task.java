@@ -1,16 +1,19 @@
+import java.time.Duration;
 import java.time.LocalTime;
 
 public class Task {
     private String taskTypeID;
     private double size;
     private Station station;
-    private double duration;
-
+    private Duration duration;
     private LocalTime startTime;
+    private LocalTime finishTime;
+    private String state;
 
-    public Task(String taskTypeID) {
+    public Task(String taskTypeID){
         this.taskTypeID=taskTypeID;
         this.size=0.0;
+        this.state="Waiting..";
     }
 
     public Task() {
@@ -40,11 +43,28 @@ public class Task {
         this.station = station;
     }
 
-    public double getDuration() {return duration;}
+    public Duration getDuration() {return duration;}
 
-    public void setDuration(double duration) {this.duration = duration;}
+    public void setDuration(Duration duration) {this.duration = duration;}
     public LocalTime getStartTime() {return startTime;}
 
     public void setStartTime(LocalTime startTime) {this.startTime = startTime;}
+    public LocalTime getStarTime(){
+        return  startTime;
+    }
+    public void setFinishTime(){
+        finishTime=startTime.plus(duration);
+    }
+    public LocalTime getFinishTime(){
+        return  finishTime;
+    }
+    public void setStateDone() {
+        this.state="Done.";
+    }
+    public void setStateExecuting(){
+        this.state="Executing..";
+    }
+    public String getState() {return state;}
+
 
 }
