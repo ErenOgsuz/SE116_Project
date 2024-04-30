@@ -2,15 +2,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     protected static ArrayList<Task> taskTypes =new ArrayList<Task>();
-    protected static ArrayList<JobType> jobTypes =new ArrayList<JobType>();
+    protected static ArrayList<Job> jobTypes =new ArrayList<Job>();
     protected static ArrayList<Station> stationsTypes = new ArrayList<Station>();
-    protected static ArrayList<Job> jobs = new ArrayList<Job>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String jobFilePath = "JobFile.txt"; // The path of Job file
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
 
@@ -42,6 +40,10 @@ public class Main {
         TaskReader.readTasks();
         JobReader.readJobs();
         StationReader.readStations();
-        JobFileReader.readJobsFromFile();
+        Station sr = new Station();
+
+        stationsTypes.add(sr);
+
+
     }
 }

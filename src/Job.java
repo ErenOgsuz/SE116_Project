@@ -1,36 +1,33 @@
+import java.util.ArrayList;
+
 public class Job {
-    private String jobId;
-    private String jobTypeId; //may be changed to "Has-a"jobType
+    private String jobID;
     private int startTime;
     private int duration;
+    private ArrayList<Task> tasks;
+    private int taskIndex;
     private int deadline;
 
-    public Job(String jobId, String jobTypeId, int startTime, int duration) {
-        this.jobId = jobId;
-        this.jobTypeId = jobTypeId;
-        this.startTime = startTime;
+    public Job(String jobID, ArrayList<Task> tasks) {
+        this.jobID = jobID;
+        this.tasks = tasks;
+    }
+
+    public void setDuration(int duration) {
         this.duration = duration;
-        this.deadline = startTime + duration; // Calculate the deadline
-    }
-
-    // Getter methods
-    public String getJobId() {
-        return jobId;
-    }
-
-    public String getJobTypeId() {
-        return jobTypeId;
-    }
-
-    public int getStartTime() {
-        return startTime;
     }
 
     public int getDuration() {
         return duration;
     }
 
-    public int getDeadline() {
-        return deadline;
+    public String getJobID() {
+        return jobID;
     }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public Job(){}
 }

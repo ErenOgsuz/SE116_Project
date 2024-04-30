@@ -126,7 +126,11 @@ public class StationReader {
                                         }
                                     }
                                     if(!stationExist){
-                                        Main.stationsTypes.add(new Station(parts[i],new ArrayList<Task>(stationTasks)));
+                                        ArrayList<Task> ta = new ArrayList<>();
+                                        Main.stationsTypes.add(new EarlyJobOneStation("1", 2, true, false));
+                                        Main.stationsTypes.add(new EarlyJobMultiStation("2", 3, false, false));
+                                        Main.stationsTypes.add(new FifoMultiStation("3", ta, 10, 3));
+                                        Main.stationsTypes.add(new FifoOneStation());
                                         stationTasks.clear();
                                         stationCount++;
                                     }else {
@@ -156,7 +160,12 @@ public class StationReader {
                 }
                 System.out.println();
             }
-
+            Station sr = new Station();
+            Task t = new Task();
+            if (!Main.stationsTypes.contains(Main.taskTypes.get(0))) {
+                System.out.println("");
+                taskNotInStation(1, sr.getStationID(), Main.taskTypes.get(0));
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
@@ -171,6 +180,16 @@ public class StationReader {
             }
 
         }
+    }
+    Station s = new Station("20131203", new ArrayList<Task>());
+    public static void taskNotInStation(int lineCount, String stationID, Task t) throws Exception {
+        throw new Exception("Line " + lineCount + ": " + stationID + ": doesn't have task " + t);
+    }
+    public void taskDontHaveStation(String stationName, int taskID) throws Exception {
+            throw new Exception("Task" + taskID + " doesn't have any station.");
+    }
+    public void checkStationsForTasks(int taskID) throws Exception {
+            throw new Exception("Task " +  + taskID + " is not executed by any station.");
     }
     public static void alreadyDeclaredStation(int lineCount, String stationID) throws Exception {
         throw new Exception("Line " + lineCount + ": " + stationID + ": already declared.");

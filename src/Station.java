@@ -7,6 +7,23 @@ public class Station {
     private int speed;
     private ArrayList<Task> tasks;
     private ArrayList<Task> targetTasks;
+    private int currenttaskno;
+
+    public Station(String stationID, ArrayList<Task> tasks,int capacity){
+        this.stationID = stationID;
+        this.tasks = tasks;
+        this.speed = 1;
+        maxCapacity = capacity;
+        boolean[] desks= new boolean[capacity];
+
+    }
+
+    public void setCurrenttask(int currenttask) {
+        this.currenttaskno = currenttask;
+    }
+    public int getCurrenttask() {
+        return currenttaskno;
+    }
     public boolean[] desks;// capacity of the station is the size.
     //for stations which can handle one task
     public Station(String stationID, ArrayList<Task> tasks){
@@ -17,14 +34,6 @@ public class Station {
         boolean[] desks= new boolean[1];
     }
     //for Stations which can handle multiple tasks
-    public Station(String stationID, ArrayList<Task> tasks,int capacity){
-        this.stationID = stationID;
-        this.tasks = tasks;
-        this.speed=1;
-        maxCapacity=capacity;
-        boolean[] desks= new boolean[capacity];
-
-    }
 
     public Station() {
     }
@@ -51,6 +60,9 @@ public class Station {
 
     public void setState(boolean state) {
         this.state = state;
+    }
+    public boolean getState() {
+        return state;
     }
 
     public int getSpeed() {

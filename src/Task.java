@@ -8,7 +8,7 @@ public class Task {
 
     private LocalTime startTime;
 
-    public Task(String taskTypeID){
+    public Task(String taskTypeID) {
         this.taskTypeID=taskTypeID;
         this.size=0.0;
     }
