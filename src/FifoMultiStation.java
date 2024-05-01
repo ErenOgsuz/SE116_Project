@@ -10,13 +10,8 @@ public class FifoMultiStation extends Station{
     private ArrayList<Task> targetTasks;
     public boolean[] desks;
 
-    public FifoMultiStation(String stationID, ArrayList<Task> tasks, int speed, int maxCapacity){
-        super(stationID, tasks);
-        this.speed=1;
-        maxCapacity=1;
-        boolean[] desks= new boolean[1];
-        desks[0] = true;
-        this.state = true;
+    public FifoMultiStation(String stationID, ArrayList<Task> tasks,int capacity){
+        super(stationID,tasks,capacity);
     }
 
     public void addTask(Task task){

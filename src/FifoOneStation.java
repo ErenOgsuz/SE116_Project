@@ -1,6 +1,11 @@
 import java.util.ArrayList;
 
 public class FifoOneStation extends Station {
+
+    public FifoOneStation(String stationID, ArrayList<Task> tasks, int capacity) {
+        super(stationID, tasks, capacity);
+    }
+
     public void addTask(Task task){
         getTargetTasks().add(task);
         task.setDuration(calculateDuration(task));

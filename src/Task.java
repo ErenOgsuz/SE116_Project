@@ -5,7 +5,7 @@ public class Task {
     private String taskTypeID;
     private double size;
     private Station station;
-    private Duration duration;
+    private double duration;
     private LocalTime startTime;
     private LocalTime finishTime;
     private String state;
@@ -43,18 +43,20 @@ public class Task {
         this.station = station;
     }
 
-    public Duration getDuration() {return duration;}
+    public double getDuration() {return duration;}
 
-    public void setDuration(Duration duration) {this.duration = duration;}
+    public void setDuration(double duration) {this.duration = duration;}
     public LocalTime getStartTime() {return startTime;}
 
     public void setStartTime(LocalTime startTime) {this.startTime = startTime;}
     public LocalTime getStarTime(){
         return  startTime;
     }
-    public void setFinishTime(){
+
+    /*public void setFinishTime(){
         finishTime=startTime.plus(duration);
-    }
+    }*/
+
     public LocalTime getFinishTime(){
         return  finishTime;
     }

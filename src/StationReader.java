@@ -13,6 +13,7 @@ public class StationReader {
         boolean isThereStation = false;
         boolean isThereTask = false;
         boolean multiflag = false;
+        boolean fifoflag = false;
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
             boolean isStation = false;
@@ -56,6 +57,17 @@ public class StationReader {
                                 multiflag = true;
                             } else if (flag.equals("N")) {
                                 multiflag = false;
+                            }
+                        }
+                    }
+
+                    if (line.contains("N") || line.contains("Y")) {
+                        if (parts.length >= 3) {
+                            String flag = parts[3].toUpperCase();
+                            if (flag.equals("Y")) {
+                                fifoflag = true;
+                            } else if (flag.equals("N")) {
+                                fifoflag = false;
                             }
                         }
                     }
@@ -126,13 +138,23 @@ public class StationReader {
                                         }
                                     }
                                     if(!stationExist){
-                                        ArrayList<Task> ta = new ArrayList<>();
-                                        Main.stationsTypes.add(new EarlyJobOneStation("1", 2, true, false));
-                                        Main.stationsTypes.add(new EarlyJobMultiStation("2", 3, false, false));
-                                        Main.stationsTypes.add(new FifoMultiStation("3", ta, 10, 3));
-                                        Main.stationsTypes.add(new FifoOneStation());
-                                        stationTasks.clear();
-                                        stationCount++;
+                                        if(multiflag && fifoflag){
+                                            Main.stationsTypes.add(new FifoMultiStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
+                                            stationTasks.clear();
+                                            stationCount++;
+                                        } else if(multiflag && !fifoflag){
+                                            Main.stationsTypes.add(new EarlyJobMultiStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
+                                            stationTasks.clear();
+                                            stationCount++;
+                                        } else if(!multiflag && fifoflag){
+                                            Main.stationsTypes.add(new FifoOneStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
+                                            stationTasks.clear();
+                                            stationCount++;
+                                        } else if(!multiflag && !fifoflag){
+                                            Main.stationsTypes.add(new EarlyJobOneStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
+                                            stationTasks.clear();
+                                            stationCount++;
+                                        }
                                     }else {
                                         alreadyDeclaredStation(lineCount,parts[i]);
                                     }
@@ -162,10 +184,10 @@ public class StationReader {
             }
             Station sr = new Station();
             Task t = new Task();
-            if (!Main.stationsTypes.contains(Main.taskTypes.get(0))) {
+            /*if (!Main.stationsTypes.contains(Main.taskTypes.get(0))) {
                 System.out.println("");
                 taskNotInStation(1, sr.getStationID(), Main.taskTypes.get(0));
-            }
+            }*/
         } catch (Exception exception) {
             exception.printStackTrace();
         }

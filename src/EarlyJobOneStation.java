@@ -2,50 +2,8 @@ import java.util.ArrayList;
 
 public class EarlyJobOneStation extends Station {
 
-    private String stationID;
-    private int maxcapacity;
-    private boolean multiflag;
-    private boolean fifoflag;
-
-    public EarlyJobOneStation(String stationID, int maxCapacity, boolean multiFlag, boolean fifoFlag) {
-        this.stationID = stationID;
-        this.maxcapacity = maxCapacity;
-        this.multiflag = multiFlag;
-        this.fifoflag = fifoFlag;
-    }
-
-    @Override
-    public String getStationID() {
-        return stationID;
-    }
-
-    @Override
-    public void setStationID(String stationID) {
-        this.stationID = stationID;
-    }
-
-    public int getMaxcapacity() {
-        return maxcapacity;
-    }
-
-    public void setMaxcapacity(int maxcapacity) {
-        this.maxcapacity = maxcapacity;
-    }
-
-    public boolean isMultiflag() {
-        return multiflag;
-    }
-
-    public void setMultiflag(boolean multiflag) {
-        this.multiflag = multiflag;
-    }
-
-    public boolean isFifoflag() {
-        return fifoflag;
-    }
-
-    public void setFifoflag(boolean fifoflag) {
-        this.fifoflag = fifoflag;
+    public EarlyJobOneStation(String stationID, ArrayList<Task> tasks,int capacity) {
+        super(stationID,tasks,capacity);
     }
 
     public void addTask(Task task){}

@@ -2,16 +2,9 @@ import java.util.ArrayList;
 
 public class EarlyJobMultiStation extends Station{
 
-    private String stationID;
-    private int maxcapacity;
-    private boolean multiflag;
-    private boolean fifoflag;
 
-    public EarlyJobMultiStation(String stationID, int maxCapacity, boolean multiFlag, boolean fifoFlag) {
-        this.stationID = stationID;
-        this.maxcapacity = maxCapacity;
-        this.multiflag = multiFlag;
-        this.fifoflag = fifoFlag;
+    public EarlyJobMultiStation(String stationID, ArrayList<Task> tasks,int capacity) {
+        super(stationID,tasks,capacity);
     }
     public void calculateStartTime(Task task) {
         double starttime = 0;
