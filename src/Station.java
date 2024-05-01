@@ -18,6 +18,32 @@ public class Station {
 
     }
 
+    public void addTask(Task task) {
+        // Add the task to the station's task list
+        tasks.add(task);
+        // Set the station of the task to this station
+        task.setStation(this);
+        // Update the current task count in the station
+        currenttaskno++;
+        // Update the state of the station
+        if (currenttaskno >= maxCapacity) {
+            state = false; // Station is full
+        } else {
+            state = true; // Station still has capacity
+        }
+    }
+
+
+    public boolean canExecuteTaskType(String taskType) {
+        for (Task task : tasks) {
+            if (task.getTaskTypeID().equals(taskType)) {
+                return true; // Station has at least one task of the given type
+            }
+        }
+        return false; // Station does not have any task of the given type
+    }
+
+
     public void setCurrenttask(int currenttask) {
         this.currenttaskno = currenttask;
     }
