@@ -3,74 +3,32 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class TaskScheduler {
+    private Task task;
     private List<JobType> jobTypes;
     private List<Station> stations;
     private int roundRobinIndex = 0; // For round-robin station selection
-    private Random random = new Random();
+    private static Random random = new Random();
 
-    public TaskScheduler(List<JobType> jobTypes, List<Station> stations) {
-        this.jobTypes = jobTypes;
-        this.stations = stations;
+    public TaskScheduler(Task task) {
+        this.task=task;
     }
 
-    public void handleCompletedTask(Task completedTask) {
-        JobType jobType = findJobTypeByTask(completedTask);
-        Task nextTask = findNextTaskInJobType(jobType, completedTask);
-        if (nextTask == null) {
-            System.out.println("No more tasks in job " + jobType.getJobID());
-            return;
-        }
-
-        Station suitableStation = findSuitableStation(nextTask);
-
-        if (suitableStation != null) {
-            suitableStation.addTask(nextTask);
-            nextTask.setStation(suitableStation);
-            nextTask.setStateExecuting();
-        } else {
-            System.out.println("No suitable station found for task " + nextTask.getTaskTypeID());
-        }
-    }
-
-    private JobType findJobTypeByTask(Task task) {
-        for (JobType jobType : jobTypes) {
-            if (jobType.getTasks().contains(task)) {
-                return jobType;
-            }
-        }
-        return null;
-    }
-
-    private Task findNextTaskInJobType(JobType jobType, Task completedTask) {
-        List<Task> tasks = jobType.getTasks();
-        int index = tasks.indexOf(completedTask);
-        if (index < tasks.size() - 1) {
-            return tasks.get(index + 1);
-        } else {
-            return null;
-        }
-    }
-
-    private Station findSuitableStation(Task task) {
+    public static void findSuitableStation(Task task) {
         List<Station> suitableStations = new ArrayList<>();
 
-        for (Station station : stations) {
+        for (Station station : Main.stationsTypes) {
             if (station.canExecuteTaskType(task.getTaskTypeID())) {
                 suitableStations.add(station);
             }
         }
 
-        if (suitableStations.isEmpty()) {
-            return null;
-        }
+        task.setStation(chooseStationRandomly(suitableStations)); // Here, we randomly select a suitable station
 
-        // Choose a station based on workload or other criteria
-        // Here, we randomly select a suitable station
-        // You can replace this with more sophisticated logic
-        return chooseStationRandomly(suitableStations);
+        System.out.println("The suitable station is founded.");
+
     }
 
-    private Station chooseStationRandomly(List<Station> stations) {
+    private static Station chooseStationRandomly(List<Station> stations) {
         // Round-robin station selection
         // Uncomment this block if you want to use round-robin
         /*
@@ -82,5 +40,7 @@ public class TaskScheduler {
         // Random station selection
         int index = random.nextInt(stations.size());
         return stations.get(index);
+        // if the chosen station is not working like fifo set the times of tasks and rearrange the event times.
+        //
     }
 }
