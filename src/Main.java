@@ -9,6 +9,7 @@ public class Main {
     protected static ArrayList<JobType> jobTypes =new ArrayList<JobType>();
     protected static ArrayList<Station> stationsTypes = new ArrayList<Station>();
     protected static ArrayList<Job> jobs = new ArrayList<Job>();
+    protected static ArrayList<Event> events= new ArrayList<Event>();
 
     public static void main(String[] args) {
         String jobFilePath = "JobFile.txt"; // The path of Job file
@@ -43,5 +44,6 @@ public class Main {
         JobReader.readJobs();
         StationReader.readStations();
         JobFileReader.readJobsFromFile();
+        EventFlow.eventFlow();
     }
 }
