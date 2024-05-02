@@ -147,11 +147,11 @@ public class StationReader {
                                             stationTasks.clear();
                                             stationCount++;
                                         } else if(!multiflag && fifoflag){
-                                            Main.stationsTypes.add(new FifoOneStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
+                                            Main.stationsTypes.add(new FifoOneStation(parts[i], new ArrayList<Task>(stationTasks)));
                                             stationTasks.clear();
                                             stationCount++;
                                         } else if(!multiflag && !fifoflag){
-                                            Main.stationsTypes.add(new EarlyJobOneStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
+                                            Main.stationsTypes.add(new EarlyJobOneStation(parts[i], new ArrayList<Task>(stationTasks)));
                                             stationTasks.clear();
                                             stationCount++;
                                         }
@@ -182,8 +182,8 @@ public class StationReader {
                 }
                 System.out.println();
             }
-            Station sr = new Station();
-            Task t = new Task();
+            //Station sr = new Station();
+            //Task t = new Task();
             /*if (!Main.stationsTypes.contains(Main.taskTypes.get(0))) {
                 System.out.println("");
                 taskNotInStation(1, sr.getStationID(), Main.taskTypes.get(0));
@@ -203,7 +203,6 @@ public class StationReader {
 
         }
     }
-    Station s = new Station("20131203", new ArrayList<Task>());
     public static void taskNotInStation(int lineCount, String stationID, Task t) throws Exception {
         throw new Exception("Line " + lineCount + ": " + stationID + ": doesn't have task " + t);
     }

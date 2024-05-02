@@ -2,14 +2,23 @@ import java.util.ArrayList;
 
 public class FifoOneStation extends Station {
 
-    public FifoOneStation(String stationID, ArrayList<Task> tasks, int capacity) {
-        super(stationID, tasks, capacity);
+    public FifoOneStation(String stationID, ArrayList<Task> tasks) {
+        super(stationID, tasks);
+    }
+
+    public void pickTask(){
+        if (getCurrentTasks().isEmpty()){
+            getCurrentTasks().add(getTargetTasks().getFirst());
+            getTargetTasks().removeFirst();
+            displayState();
+        }
     }
 
     public void addTask(Task task){
         getTargetTasks().add(task);
         task.setDuration(calculateDuration(task));
     }
+
     public void calculateStartTime(Task task) {
         double starttime = 0;
         for (int i = 0; i < task.getStation().getTasks().get(i).getDuration(); i++) {
@@ -17,14 +26,11 @@ public class FifoOneStation extends Station {
         }
         System.out.println("Start time for the job is: " + starttime);
     }
-    public void displayTheState(FifoOneStation s){
-        if (s.getState()) {
-            System.out.println("The state of the station is active.");
-        }
-        else {
-            System.out.println("The state of the station is deactivated.");
-        }
+
+    public void displayTheState(){
+        System.out.println("The state of the station is: " + super.getState());
     }
+
     public void nextTask(FifoOneStation s, int currenttask){
         if (currenttask < s.getTasks().size() - 1) {
             currenttask++;
@@ -35,8 +41,9 @@ public class FifoOneStation extends Station {
             System.out.println("All the tasks are completed.");
         }
     }
+
     public void displayExecutingTasks(FifoOneStation ss){
-        System.out.println("Tasks being executed at early job multistation:");
+        System.out.println("Tasks being executed at fifo one job station:");
         for (Task s : ss.getTasks()) {
             String stationId = s.getStation().getStationID();
             int x = ss.getCurrenttask();

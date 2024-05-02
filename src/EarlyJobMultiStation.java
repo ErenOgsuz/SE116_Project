@@ -2,25 +2,22 @@ import java.util.ArrayList;
 
 public class EarlyJobMultiStation extends Station{
 
-
     public EarlyJobMultiStation(String stationID, ArrayList<Task> tasks,int capacity) {
         super(stationID,tasks,capacity);
     }
-    public void calculateStartTime(Task task) {
-        double starttime = 0;
-        for (int i = 0; i < task.getStation().getTasks().get(i).getDuration(); i++) {
-            starttime += task.getStation().getTasks().get(i).getDuration();
-        }
-        System.out.println("Start time for the job is: " + starttime);
-    }
-    public void displayTheState(EarlyJobMultiStation s){
-        if (s.getState()) {
-            System.out.println("The state of the station is active.");
-        }
-        else {
-            System.out.println("The state of the station is deactivated.");
+
+    public void pickTask(){
+        if (getCurrentTasks().size() < getMaxCapacity()){
+            getCurrentTasks().add(getTargetTasks().getFirst());
+            getTargetTasks().removeFirst();
+            displayState();
         }
     }
+
+    public void displayTheState(){
+        System.out.println("The state of the station is: " + super.getState());
+    }
+
     public void nextTask(EarlyJobMultiStation s, int currenttask){
         if (currenttask < s.getTasks().size() - 1) {
             currenttask++;
@@ -31,8 +28,9 @@ public class EarlyJobMultiStation extends Station{
             System.out.println("All the tasks are completed.");
         }
     }
+
     public void displayExecutingTasks(EarlyJobMultiStation ss){
-        System.out.println("Tasks being executed at early job multistation:");
+        System.out.println("Tasks being executed at early job multi station:");
         for (Task s : ss.getTasks()) {
             String stationId = s.getStation().getStationID();
             int x = ss.getCurrenttask();
