@@ -6,12 +6,13 @@ public class EarlyJobOneStation extends Station {
         super(stationID,tasks);
     }
 
-    public void pickTask(){
+    public boolean pickTask(double startTime){
         if (getCurrentTasks().isEmpty()){
             getCurrentTasks().add(getTargetTasks().getFirst());
             getTargetTasks().removeFirst();
             displayState();
         }
+        return true;
     }
 
     public void calculateStartTime(Task task) {

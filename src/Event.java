@@ -3,20 +3,20 @@ import java.time.LocalTime;
 public class Event {
     private String eventType;
     private Station station;
-    private LocalTime deadLine;
-    private LocalTime taskStartTime;
-    private LocalTime eventStartTime;
+    private double deadLine;
+    private double taskStartTime;
+    private double eventStartTime;
     private Job job;
     private JobType JobType;
     private Task task;
 
-    public Event(Job job,JobType jobType,LocalTime jobStartTime){
+    public Event(Job job,JobType jobType,double jobStartTime){
             eventType="JobStarting";
             this.job=job;
             this.eventStartTime=jobStartTime;
     }
 
-    public Event(Job job, JobType jobType, Task task, Station station, LocalTime deadLine, LocalTime eventStartTime, LocalTime jobStartTime){
+    public Event(Job job, JobType jobType, Task task, Station station, double deadLine, double eventStartTime){
         eventType="TaskStarting";
         this.deadLine=deadLine;
         this.job=job;
@@ -24,7 +24,6 @@ public class Event {
         this.task=task;
         this.station=station;
         this.eventStartTime=eventStartTime;
-        this.eventStartTime=jobStartTime;
     }
     public JobType getJobType() {
         return JobType;
@@ -57,27 +56,27 @@ public class Event {
     public void setStation(Station station) {
         this.station = station;
     }
-    public LocalTime getDeadLine() {
+    public double getDeadLine() {
         return deadLine;
     }
 
-    public void setDeadLine(LocalTime deadLine) {
+    public void setDeadLine(double deadLine) {
         this.deadLine = deadLine;
     }
 
-    public LocalTime getEventStartTime() {
+    public double getEventStartTime() {
         return eventStartTime;
     }
 
-    public void setEventStartTime(LocalTime eventStartTime) {
+    public void setEventStartTime(double eventStartTime) {
         this.eventStartTime = eventStartTime;
     }
 
-    public LocalTime getTaskStartTime() {
+    public double getTaskStartTime() {
         return taskStartTime;
     }
 
-    public void setTaskStartTime(LocalTime taskStartTime) {
+    public void setTaskStartTime(double taskStartTime) {
         this.taskStartTime = taskStartTime;
     }
     public String getEventType() {

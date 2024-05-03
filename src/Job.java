@@ -4,27 +4,19 @@ import java.time.Duration;
 public class Job {
     private final String jobId;
     private final JobType jobTypeId; // "Has-a"jobType
-    private final LocalTime startTime;
-    private final Duration duration;
-    private final LocalTime deadline;
+    private final double startTime;
+    private final double duration;
+    private double deadline;
     private String state;
     private Task executingTask;
     private Task waitingToExecute;
-    private Duration delayTime;
+    private double delayTime;
 
     public Job(String jobId, JobType jobTypeId, int startTime, int duration) {
         this.jobId = jobId;
         this.jobTypeId = jobTypeId;
-
-        this.startTime = LocalTime.of(startTime / 60, startTime % 60);
-
-        int minute = duration / 60; // calculate minutes
-        int second = duration % 60; // calculate seconds
-
-        Duration durationToAdd = Duration.ofMinutes(minute).plusSeconds(second);
-
-        this.duration = durationToAdd;
-        this.deadline = this.startTime.plus(durationToAdd);
+        this.startTime = startTime;
+        this.duration = duration;
         this.state="Waiting..";
     }
 
@@ -37,20 +29,20 @@ public class Job {
         return jobTypeId;
     }
 
-    public LocalTime getStartTime() {
+    public double getStartTime() {
         return startTime;
     }
 
-    public Duration getDuration() {
+    public double getDuration() {
         return duration;
     }
 
-    public LocalTime getDeadline(){
+    public double getDeadline(){
         return deadline;
     }
 
-    public void setState(LocalTime time) {
-        if(time.isBefore(getStartTime())){
+    public void setState(double time) {
+        if(time<getStartTime()){
             this.state="Waiting..";
         }else{
             this.state="Executing..";
@@ -97,8 +89,8 @@ public class Job {
         return waitingToExecute;
     }
 
-    public Duration getDelayTime(){
-        delayTime = Duration.between(getStartTime(), jobTypeId.getTasks().getLast().getFinishTime());
+    public double getDelayTime(){
+        delayTime = jobTypeId.getTasks().getLast().getFinishTime()-this.deadline;
         return delayTime;
     }
 

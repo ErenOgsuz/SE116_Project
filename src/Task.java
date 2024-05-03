@@ -4,11 +4,15 @@ import java.time.LocalTime;
 public class Task {
     private String taskTypeID;
     private double size;
-    private Station station;
+    private Station station; // it will assign at the taskSchedular.
     private double duration;
-    private LocalTime startTime;
-    private LocalTime finishTime;
+    private double startTime; // it will assign when the task picked
+
+    private double finishTime; // it will assign when the task picked
     private String state;
+
+    private Job job; // it will assign in TaskSchedular to create event
+    private JobType jobType; // it will assign in TaskSchedular to create event
 
     public Task(String taskTypeID){
         this.taskTypeID=taskTypeID;
@@ -46,10 +50,10 @@ public class Task {
     public double getDuration() {return duration;}
 
     public void setDuration(double duration) {this.duration = duration;}
-    public LocalTime getStartTime() {return startTime;}
+    public double getStartTime() {return startTime;}
 
-    public void setStartTime(LocalTime startTime) {this.startTime = startTime;}
-    public LocalTime getStarTime(){
+    public void setStartTime(double startTime) {this.startTime = startTime;}
+    public double getStarTime(){
         return  startTime;
     }
 
@@ -57,8 +61,11 @@ public class Task {
         finishTime=startTime.plus(duration);
     }*/
 
-    public LocalTime getFinishTime(){
+    public double getFinishTime(){
         return  finishTime;
+    }
+    public void setFinishTime(double finishTime) {
+        this.finishTime = finishTime;
     }
     public void setStateDone() {
         this.state="Done.";
@@ -67,6 +74,19 @@ public class Task {
         this.state="Executing..";
     }
     public String getState() {return state;}
+    public JobType getJobType() {
+        return jobType;
+    }
 
+    public void setJobType(JobType jobType) {
+        this.jobType = jobType;
+    }
 
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
 }

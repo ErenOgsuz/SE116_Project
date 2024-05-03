@@ -6,12 +6,13 @@ public class EarlyJobMultiStation extends Station{
         super(stationID,tasks,capacity);
     }
 
-    public void pickTask(){
+    public boolean pickTask(double startTime){
         if (getCurrentTasks().size() < getMaxCapacity()){
             getCurrentTasks().add(getTargetTasks().getFirst());
             getTargetTasks().removeFirst();
             displayState();
         }
+        return true;
     }
 
     public void displayTheState(){

@@ -6,17 +6,42 @@ public class FifoMultiStation extends Station{
         super(stationID,tasks,capacity);
     }
 
-    public void pickTask(){
-        if (getCurrentTasks().size() < getMaxCapacity()){
-            getCurrentTasks().add(getTargetTasks().getFirst());
-            getTargetTasks().removeFirst();
-            displayState();
-        }
+    public boolean pickTask(double startTime){
+        if (!getTargetTasks().isEmpty()){
+            if(getCurrenttask()<getMaxCapacity()) {
+                Task newTask = getTargetTasks().getFirst();
+                getCurrentTasks().add(newTask);
+                setCurrenttask(getCurrenttask()+1);
+                if (!getTargetTasks().isEmpty()) {
+                    for (Task task : getCurrentTasks()) {
+                        ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
+                        setCurrentTasks(newCurrentTasks);
+                    }
+                }
+                newTask.setStartTime(startTime);
+                newTask.setFinishTime(startTime+ newTask.getDuration());
+                Main.events.add(new Event(newTask.getJob(), newTask.getJobType(), newTask, newTask.getStation(), newTask.getFinishTime(), newTask.getStarTime()));
+                newTask.setStateExecuting();
+                displayState();
+                return true;
+            }else{
+                return false;
+            }
+        } return false;
     }
 
+    public void calculateStartTime(Task task) {
+        double starttime = 0;
+        for (int i = 0; i < task.getStation().getTasks().get(i).getDuration(); i++) {
+            starttime += task.getStation().getTasks().get(i).getDuration();
+        }
+        System.out.println("Start time for the job is: " + starttime);
+    }
+
+/*
     public void addTask(Task task){
         getTargetTasks().add(task);
-        task.setDuration(calculateDuration(task));
+        calculateDuration(task);
     }
 
     public void setTargetTasks(ArrayList<Task> targetTasks) {setTargetTasks(targetTasks);}
@@ -44,4 +69,6 @@ public class FifoMultiStation extends Station{
             System.out.println("Station" + stationId + ": " + x);
         }
     }
+
+ */
 }

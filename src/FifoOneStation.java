@@ -5,19 +5,45 @@ public class FifoOneStation extends Station {
     public FifoOneStation(String stationID, ArrayList<Task> tasks) {
         super(stationID, tasks);
     }
-
-    public void pickTask(){
-        if (getCurrentTasks().isEmpty()){
-            getCurrentTasks().add(getTargetTasks().getFirst());
-            getTargetTasks().removeFirst();
-            displayState();
-        }
+    // pickTask method is to pick an task from targetTask for that stations, if exists.
+    // and it create an event for scheduling.
+    // ıt return boolean to say the station take another task.
+    // ıt take double startTime, it comes from the ended task's finishTime
+    public boolean pickTask(double startTime){
+        if (!getTargetTasks().isEmpty()){
+            if(getCurrenttask()<1) {
+                Task newTask = getTargetTasks().getFirst();
+                getCurrentTasks().add(newTask);
+                setCurrenttask(getCurrenttask()+1);
+                if (!getTargetTasks().isEmpty()) {
+                    for (Task task : getCurrentTasks()) {
+                        ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
+                        setCurrentTasks(newCurrentTasks);
+                    }
+                }
+                newTask.setStartTime(startTime);
+                newTask.setFinishTime(startTime+ newTask.getDuration());
+                Main.events.add(new Event(newTask.getJob(), newTask.getJobType(), newTask, newTask.getStation(), newTask.getFinishTime(), newTask.getStarTime()));
+                newTask.setStateExecuting();
+                displayState();
+                return true;
+            }else{
+                return false;
+            }
+        } return false;
     }
 
-    public void addTask(Task task){
+    // addTask method is to add new task to targetTask. the added task will wait for execute.
+    /* there is asame class at station
+    public void addTask(Task task,Job job,JobType jobType){
+        task.setJob(job);
+        task.setJobType(jobType);
         getTargetTasks().add(task);
-        task.setDuration(calculateDuration(task));
-    }
+        calculateDuration(task);
+        super.setCurrenttask(getCurrenttask()+1);
+    }*/
+
+    //  the start time should set when it picked..
 
     public void calculateStartTime(Task task) {
         double starttime = 0;
@@ -27,9 +53,25 @@ public class FifoOneStation extends Station {
         System.out.println("Start time for the job is: " + starttime);
     }
 
-    public void displayTheState(){
+    // disPLayTheState for req 5 but there is same method at the Station class
+    /*public void displayTheState(){
+        if(!getCurrentTasks().isEmpty()) {
+            System.out.print("The executing task is");
+            for (Task task : getCurrentTasks()) {
+                System.out.println(" " + task);
+            }
+            System.out.println(".");
+        }
+        if(!getTargetTasks().isEmpty()) {
+            System.out.println("These tasks are waiting to execute:");
+            for (Task task : getTargetTasks()) {
+                System.out.println(" " + task);
+            }
+        }
         System.out.println("The state of the station is: " + super.getState());
     }
+
+
 
     public void nextTask(FifoOneStation s, int currenttask){
         if (currenttask < s.getTasks().size() - 1) {
@@ -42,6 +84,8 @@ public class FifoOneStation extends Station {
         }
     }
 
+
+    //there is same method at the station class
     public void displayExecutingTasks(FifoOneStation ss){
         System.out.println("Tasks being executed at fifo one job station:");
         for (Task s : ss.getTasks()) {
@@ -50,4 +94,6 @@ public class FifoOneStation extends Station {
             System.out.println("Station" + stationId + ": " + x);
         }
     }
+
+     */
 }

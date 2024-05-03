@@ -1,4 +1,3 @@
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -7,9 +6,9 @@ public class EventFlow {
         boolean allJobsNotFinished=true;
         int finishedJobs=0;
         Station station;
-        LocalTime starTime;
-        LocalTime deadLine;
-        LocalTime jobStartTime;
+        double starTime;
+        double deadLine;
+        double jobStartTime;
         Job job;
         JobType jobType;
         Task task;
@@ -25,7 +24,8 @@ public class EventFlow {
         Collections.sort(Main.events, new Comparator<Event>() {
             @Override
             public int compare(Event e1, Event e2) {
-                return e1.getEventStartTime().compareTo(e2.getEventStartTime());
+                // İki double değeri karşılaştırıyoruz
+                return Double.compare(e1.getEventStartTime(), e2.getEventStartTime());
             }
         });
 
@@ -54,7 +54,8 @@ public class EventFlow {
             Collections.sort(Main.events, new Comparator<Event>() {
                 @Override
                 public int compare(Event e1, Event e2) {
-                    return e1.getEventStartTime().compareTo(e2.getEventStartTime());
+                    // İki double değeri karşılaştırıyoruz
+                    return Double.compare(e1.getEventStartTime(), e2.getEventStartTime());
                 }
             });
             // rearrange the nextEvent
