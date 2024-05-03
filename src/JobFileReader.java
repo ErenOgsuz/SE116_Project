@@ -28,13 +28,15 @@ public class JobFileReader {
                 JobType jobTypeId= new JobType();
                 // Step 5: Extract job ID, job type ID, start time, and duration
                 String jobId = tokens[0];
+                boolean valid=false;
                 for (JobType jobType: Main.jobTypes) {
                     if (jobType.getJobID().equals(tokens[1])) {
                         jobTypeId = jobType;
-                        break;
-                    }else{
-                        invaildJobType(lineNumber,tokens[1]);
+                        valid =true;
                     }
+                }
+                if(!valid){
+                    invaildJobType(lineNumber,tokens[1]);
                 }
 
                 int startTime;
