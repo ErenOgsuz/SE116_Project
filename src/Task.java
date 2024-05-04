@@ -4,6 +4,7 @@ import java.time.LocalTime;
 public class Task {
     private String taskTypeID;
     private double size;
+    private double speed = 1.0;
     private Station station; // it will assign at the taskSchedular.
     private double duration;
     private double startTime; // it will assign when the task picked
@@ -17,6 +18,12 @@ public class Task {
     public Task(String taskTypeID){
         this.taskTypeID=taskTypeID;
         this.size=0.0;
+        this.state="Waiting..";
+    }
+
+    public Task(String taskTypeID, double size){
+        this.taskTypeID=taskTypeID;
+        this.size=size;
         this.state="Waiting..";
     }
 
@@ -57,7 +64,14 @@ public class Task {
         return  startTime;
     }
 
-    /*public void setFinishTime(){
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+/*public void setFinishTime(){
         finishTime=startTime.plus(duration);
     }*/
 

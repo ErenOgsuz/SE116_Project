@@ -84,41 +84,16 @@ public class StationReader {
                                             if (task.getTaskTypeID().equals(parts[j])) {
                                                 taskExist = true;
                                                 if (j < parts.length - 1 && !parts[j + 1].contains("T")) {
-                                                    if(task.getSize() == 0.0) {
-                                                        if(Double.parseDouble(parts[j + 1]) == 0.0) {
-                                                            noDefaultSize(lineCount, task.getTaskTypeID());
-                                                        }
-                                                        else if (Double.parseDouble(parts[j + 1]) >= 0){
-                                                            taskToAdd = new Task(parts[j]);
-                                                            taskToAdd.setSize(Double.parseDouble(parts[j+1]));
-                                                        }
-                                                        else {
-                                                            incorrectDefaultSize(lineCount);
-                                                        }
-                                                    }
-                                                    else if(task.getSize() != Double.parseDouble(parts[j+1])) {
-                                                        if (Double.parseDouble(parts[j+1]) >= 0){
-                                                            taskToAdd = new Task(parts[j]);
-                                                            taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
-                                                        }
-                                                        else if(Double.parseDouble(parts[j+1]) == 0.0){
-                                                            taskToAdd = task;
-                                                        }
-                                                        else if(Double.parseDouble(parts[j+1]) < 0){
-                                                            incorrectDefaultSize(lineCount);
-                                                        }
-                                                    }
-                                                    else {
-                                                        taskToAdd = task;
+                                                    taskToAdd = new Task(task.getTaskTypeID(),task.getSize());
+                                                    if(Double.parseDouble(parts[j+1]) < 0){
+                                                        invalidSpeedSize(lineCount);
+                                                    }else{
+                                                        taskToAdd.setSpeed(Double.parseDouble(parts[j+1]));
                                                     }
                                                 }
                                                 else {
-                                                    if (task.getSize() == 0.0){
-                                                        noDefaultSize(lineCount, task.getTaskTypeID());
-                                                    }
-                                                    else {
-                                                        taskToAdd = task;
-                                                    }
+                                                    taskToAdd = new Task(task.getTaskTypeID(),task.getSize());
+                                                    System.err.println(taskToAdd.getTaskTypeID() + "'s speed is not declared. Setting speed to 1");
                                                 }
                                             }
                                         }
@@ -128,8 +103,9 @@ public class StationReader {
                                         else {
                                             nonDeclaredTask(lineCount,parts[j]);
                                         }
-                                    }
-                                }
+                                    }else{
+
+                                    }                                }
                                 if(isThereTask){
                                     boolean stationExist = false;
                                     for(Station station : Main.stationsTypes){
@@ -200,25 +176,12 @@ public class StationReader {
             } else if (bracetIndex == -1) {
                 throw new Exception("Line " + lineCount + ": There is no '(' at correct place. ");
             }
-
         }
-    }
-    public static void taskNotInStation(int lineCount, String stationID, Task t) throws Exception {
-        throw new Exception("Line " + lineCount + ": " + stationID + ": doesn't have task " + t);
-    }
-    public void taskDontHaveStation(String stationName, int taskID) throws Exception {
-            throw new Exception("Task" + taskID + " doesn't have any station.");
-    }
-    public void checkStationsForTasks(int taskID) throws Exception {
-            throw new Exception("Task " +  + taskID + " is not executed by any station.");
     }
     public static void alreadyDeclaredStation(int lineCount, String stationID) throws Exception {
         throw new Exception("Line " + lineCount + ": " + stationID + ": already declared.");
     }
-    public static void noDefaultSize(int lineCount, String taskID) throws Exception{
-        throw new Exception("Line " + lineCount + ": " + taskID + " has no default size, either a default size must be declared in TASKTYPE list or the size must be declared within the job.");
-    }
-    public static void incorrectDefaultSize(int lineCount) throws Exception{
+    public static void invalidSpeedSize(int lineCount) throws Exception{
         throw new Exception("Line " + lineCount + ": There is an invalid default size.");
     }
     public static void nonDeclaredTask(int lineCount, String taskID) throws Exception{
