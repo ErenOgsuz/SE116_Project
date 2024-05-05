@@ -5,6 +5,7 @@ public class Task {
     private String taskTypeID;
     private double size;
     private double speed = 1.0;
+    private double plusMinus=1.0;
     private Station station; // it will assign at the taskSchedular.
     private double duration;
     private double startTime; // it will assign when the task picked
@@ -70,6 +71,13 @@ public class Task {
 
     public void setSpeed(double speed) {
         this.speed = speed;
+    }
+    public double getPlusMinus() {
+        return plusMinus;
+    }
+
+    public void setPlusMinus(double plusMinus) {
+        this.plusMinus = plusMinus;
     }
 /*public void setFinishTime(){
         finishTime=startTime.plus(duration);

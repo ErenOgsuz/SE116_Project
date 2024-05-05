@@ -89,6 +89,14 @@ public class StationReader {
                                                         invalidSpeedSize(lineCount);
                                                     }else{
                                                         taskToAdd.setSpeed(Double.parseDouble(parts[j+1]));
+                                                        if (j+1 < parts.length - 1 && !parts[j + 2].contains("T")) {
+                                                            taskToAdd = new Task(task.getTaskTypeID(),task.getSize());
+                                                            if(Double.parseDouble(parts[j+2]) < 0 || Double.parseDouble(parts[j+2])>1){
+                                                                invalidPlusMinus(lineCount);
+                                                            }else{
+                                                                taskToAdd.setPlusMinus(Double.parseDouble(parts[j+2]));
+                                                            }
+                                                        }
                                                     }
                                                 }
                                                 else {
@@ -154,7 +162,7 @@ public class StationReader {
             for (Station station : Main.stationsTypes) {
                 System.out.print(station.getStationID() + " ");
                 for(Task task : station.getTasks()){
-                    System.out.print(task.getTaskTypeID() + " ");
+                    System.out.print(task.getTaskTypeID() + " "+task.getPlusMinus()+" ");
                 }
                 System.out.println();
             }
@@ -192,5 +200,8 @@ public class StationReader {
     }
     public static void stationIDisWrong(int lineCount) throws Exception{
         throw new Exception("Line " + lineCount + ": StationID is written wrong, write \"S\" first then give number");
+    }
+    public static void invalidPlusMinus(int lineCount) throws Exception{
+        throw new Exception("Line " + lineCount + ": the PlusMinus rate is invalid.");
     }
 }
