@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Station {
     private String stationID;
@@ -6,10 +7,11 @@ public abstract class Station {
     private String state; // it will change in TaskSchedular.
     private boolean isFull;
     private int speed;
-    private ArrayList<Task> tasksCanDo;
-    private ArrayList<Task> targetTasks;
-    private ArrayList<Task> currentTasks;
+    private ArrayList<Task> tasksCanDo; // station can handle these tasks
+    private ArrayList<Task> targetTasks; //station took these tasks but they wait for executing tasks
+    private ArrayList<Task> currentTasks; // station execute these tasks
     private int currenttaskno; // it is for executing tasks
+
     //private boolean[] desks;// capacity of the station is the size.
 
     //for Stations which can handle multiple tasks
@@ -27,7 +29,7 @@ public abstract class Station {
         this.tasksCanDo = tasksCanDo;
         this.speed=1;
         maxCapacity=1;
-        boolean[] desks= new boolean[1];
+        //boolean[] desks= new boolean[1];
     }
 
     public Station() {
@@ -46,13 +48,9 @@ public abstract class Station {
     public ArrayList<Task> getTasks() {return tasksCanDo;}
     public ArrayList<Task> getTargetTasks() {return targetTasks;}
     public void setTargetTasks(ArrayList<Task> targetTasks) {this.targetTasks = targetTasks;}
-    /*public boolean[] getDesks() {return desks;}
-    public void setDesks(boolean[] desks) {this.desks = desks;}
-*/
     public int getMaxCapacity() {
         return maxCapacity;
     }
-
     public ArrayList<Task> getCurrentTasks() {
         return currentTasks;
     }
@@ -60,18 +58,14 @@ public abstract class Station {
         this.currentTasks = currentTasks;
     }
 
-
+    // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
     public void addTask(Task task,Job job,JobType jobType) {
         // set the task to the job to create event
         task.setJob(job);
         // set the task to the jobType to create event
         task.setJobType(jobType);
-        // Add the task to the station's task list
-        targetTasks.add(task);
         // Set the station of the task to this station
         task.setStation(this);
-        // calculate duration to set the task for an event
-        calculateDuration(task);
         // Update the state of the station
         if (currenttaskno >= maxCapacity) {
             isFull = false; // Station is full
@@ -95,7 +89,9 @@ public abstract class Station {
     }
 
     public abstract boolean pickTask(double startTime);
+    public abstract double calculateStartTime(Task task, double currentTime);
 
+    // to check the taskType can handle the taskType
     public boolean canExecuteTaskType(String taskType) {
         for (Task task : tasksCanDo) {
             if (task.getTaskTypeID().equals(taskType)) {
@@ -106,7 +102,13 @@ public abstract class Station {
     }
 
     //calculateDuration is to select the fastest station.
-    public void calculateDuration(Task task){
-        task.setDuration(task.getSize()/getSpeed());
+    public double calculateDuration(Task task){
+        Random random=new Random();
+        double minSpeed= task.getSize()/getSpeed()-task.getSize()/getSpeed()*task.getPlusMinus();
+        double maxSpeed=  task.getSize()/getSpeed()+task.getSize()/getSpeed()*task.getPlusMinus();
+        return minSpeed+(maxSpeed-minSpeed)*random.nextDouble();
+    }
+    public double calculateOptimalDuration(Task task){
+        return task.getSize()/getSpeed();
     }
 }

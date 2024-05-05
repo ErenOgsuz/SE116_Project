@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FifoMultiStation extends Station{
 
@@ -6,18 +7,29 @@ public class FifoMultiStation extends Station{
         super(stationID,tasks,capacity);
     }
 
+    // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
+    public void addTask(Task task,Job job,JobType jobType){
+        // Add the task to the station's task list
+        getTargetTasks().add(task);
+        super.addTask(task,job,jobType);
+    }
+
+    // pickTask method is to pick a task from targetTask for that stations, if exists.
+    // and it creates an event for scheduling.
+    // ıt return boolean to say the station take another task.
+    // ıt take double startTime, it comes from the ended task's finishTime
     public boolean pickTask(double startTime){
         if (!getTargetTasks().isEmpty()){
-            if(getCurrenttask()<getMaxCapacity()) {
+            if(getCurrenttask()<1) {
                 Task newTask = getTargetTasks().getFirst();
                 getCurrentTasks().add(newTask);
                 setCurrenttask(getCurrenttask()+1);
                 if (!getTargetTasks().isEmpty()) {
-                    for (Task task : getCurrentTasks()) {
-                        ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
-                        setCurrentTasks(newCurrentTasks);
-                    }
+                    ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
+                    setCurrentTasks(newCurrentTasks);
                 }
+                // calculate duration to set the task for an event
+                newTask.setDuration(calculateDuration(newTask));
                 newTask.setStartTime(startTime);
                 newTask.setFinishTime(startTime+ newTask.getDuration());
                 Main.events.add(new Event(newTask.getJob(), newTask.getJobType(), newTask, newTask.getStation(), newTask.getFinishTime(), newTask.getStarTime()));
@@ -30,45 +42,32 @@ public class FifoMultiStation extends Station{
         } return false;
     }
 
-    public void calculateStartTime(Task task) {
-        double starttime = 0;
-        for (int i = 0; i < task.getStation().getTasks().get(i).getDuration(); i++) {
-            starttime += task.getStation().getTasks().get(i).getDuration();
+    // calculateStartTime is for find the optimal station
+    public double calculateStartTime(Task task, double currentTime) {
+
+        double[] hasTimeToFinish = new double[getMaxCapacity()]; // for desks(based on capacity) of stations
+
+        // to know how much time is left
+        for(int i=0;i<=getCurrenttask();++i){
+          hasTimeToFinish[i]=getCurrentTasks().get(i).getFinishTime()-currentTime;
         }
-        System.out.println("Start time for the job is: " + starttime);
-    }
 
-/*
-    public void addTask(Task task){
-        getTargetTasks().add(task);
-        calculateDuration(task);
-    }
+        // sort the left times to add times of targetTasks
+        Arrays.sort(hasTimeToFinish);
 
-    public void setTargetTasks(ArrayList<Task> targetTasks) {setTargetTasks(targetTasks);}
-
-    public void displayTheState(){
-        System.out.println("The state of the station is: " + super.getState());
-    }
-
-    public void nextTask(FifoMultiStation s, int currenttask){
-        if (currenttask < s.getTasks().size() - 1) {
-            currenttask++;
-            s.setCurrenttask(currenttask);
-            ArrayList<Task> t = new ArrayList<>(s.getTasks());
-            String nextTask = t.get(currenttask).getTaskTypeID();
-        } else {
-            System.out.println("All the tasks are completed.");
+        // we can add times of targetTasks task by task because it works like fifo
+        int i=0;
+        while(i < getTargetTasks().size()) {
+            for(int j = 0; j < hasTimeToFinish.length; j++){
+                hasTimeToFinish[j]+=calculateOptimalDuration(task.getStation().getTasks().get(i));
+                i++;
+            }
         }
-    }
 
-    public void displayExecutingTasks(FifoMultiStation ss){
-        System.out.println("Tasks being executed at fifo multi station:");
-        for (Task s : ss.getTasks()) {
-            String stationId = s.getStation().getStationID();
-            int x = ss.getCurrenttask();
-            System.out.println("Station" + stationId + ": " + x);
-        }
-    }
+        // again sort to know fast desk and how much time left for it
+        Arrays.sort(hasTimeToFinish);
 
- */
+        // Returns how much time is left from the first idle table if it will be added now.
+        return hasTimeToFinish[0];
+    }
 }
