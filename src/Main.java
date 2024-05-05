@@ -45,7 +45,7 @@ public class Main {
         StationReader.readStations();
         JobFileReader.readJobsFromFile();
         //EventFlow.eventFlow(); //Commented for now
-        JobType J1 = new JobType("J1", taskTypes);
+        /*JobType J1 = new JobType("J1", taskTypes);
         JobType J2 = new JobType("J2", taskTypes);
         JobType J3 = new JobType("J3", taskTypes);
 
@@ -65,6 +65,6 @@ public class Main {
             System.out.println("Deadline deviation: " + j.getDelayTime());
             j.getExecutingTask().setStateDone();
             System.out.println(j.getState());
-        }
+        }*/
     }
 }

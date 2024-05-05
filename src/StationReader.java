@@ -14,6 +14,7 @@ public class StationReader {
         boolean isThereTask = false;
         boolean multiflag = false;
         boolean fifoflag = false;
+        String allLine = "";
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
             boolean isStation = false;
@@ -26,9 +27,7 @@ public class StationReader {
                 }
 
                 if (line.contains("STATIONS")){
-                    int stationTypesIndex = line.indexOf("STATIONS");
-                    int openingParenthesisIndex = line.indexOf("(");
-                    controlBracket(lineCount, stationTypesIndex, openingParenthesisIndex,0);
+                    allLine = allLine.concat(line);
                     lineCount++;
                     isStation = true;
                     continue;
@@ -37,6 +36,11 @@ public class StationReader {
                 if (line.contains("S") && isStation) {
                     isThereStation = true;
                     String[] parts =line.split(" ");
+
+                    for(String part: parts){
+                        part=part.trim();
+                        allLine= allLine.concat(part);
+                    }
 
                     for (int i = 0; i< parts.length; i++){
                         parts[i] = parts[i].trim();
@@ -159,6 +163,14 @@ public class StationReader {
 
             }
 
+            if(!allLine.startsWith("(")){
+                System.out.println(allLine);
+                controlBracket("(");
+            }
+            if(!allLine.endsWith("))")){
+                controlBracket(")");
+            }
+
             for (Station station : Main.stationsTypes) {
                 System.out.print(station.getStationID() + " ");
                 for(Task task : station.getTasks()){
@@ -177,13 +189,11 @@ public class StationReader {
         }
 
     }
-    public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
-        if (bracketType == 0) {
-            if (bracetIndex > controlIndex) {
-                throw new Exception("Line " + lineCount + ": There is no '(' at correct place. ");
-            } else if (bracetIndex == -1) {
-                throw new Exception("Line " + lineCount + ": There is no '(' at correct place. ");
-            }
+    public static void controlBracket(String bracketType) throws  Exception {
+        if (bracketType.equals("(")) {
+            throw new Exception("There is no '(' at correct place. ");
+        } else if (bracketType.equals(")")) {
+            throw new Exception("There is no ')' at correct place. ");
         }
     }
     public static void alreadyDeclaredStation(int lineCount, String stationID) throws Exception {

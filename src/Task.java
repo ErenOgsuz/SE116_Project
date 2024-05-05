@@ -5,7 +5,7 @@ public class Task {
     private String taskTypeID;
     private double size;
     private double speed = 1.0;
-    private double plusMinus=1.0;
+    private double plusMinus= 0.0;
     private Station station; // it will assign at the taskSchedular.
     private double duration;
     private double startTime; // it will assign when the task picked

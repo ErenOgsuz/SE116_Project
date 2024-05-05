@@ -10,6 +10,7 @@ public class JobReader {
         String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
 
         int lineCount = 1;  // indicates the line read.
+        String allLine = "";
         boolean isThereJob = false; // checks if any job is given
         boolean isThereTask = false; // checks if any task is given for the job
 
@@ -20,14 +21,17 @@ public class JobReader {
                 line = br.readLine();
 
                 if(line.contains("JOBTYPES")){
-                    int jobTypesIndex = line.indexOf("JOBTYPES");
-                    int openingParenthesisIndex = line.indexOf("(");
-                    controlBracket(lineCount, jobTypesIndex, openingParenthesisIndex,0);
+                    allLine = allLine.concat(line);
                     lineCount++;
                     continue;
                 } else if (line.contains("J")) { // If line has J in it, it will start to create a Job object
                     isThereJob = true;
                     String[] parts =line.split(" ");
+
+                    for(String part: parts){
+                        part=part.trim();
+                        allLine= allLine.concat(part);
+                    }
 
                     for(int i = 0; i< parts.length; i++){ // Clean the Strings from empty space and parentheses
                         parts[i] = parts[i].trim();
@@ -125,6 +129,14 @@ public class JobReader {
                 noJob();
             }
 
+            if(!allLine.startsWith("(")){
+                System.out.println(allLine);
+                controlBracket("(");
+            }
+            if(!allLine.endsWith("))")){
+                controlBracket(")");
+            }
+
             for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
                 System.out.print(job.getJobID() + " ");
                 for(Task task : job.getTasks()){
@@ -139,14 +151,12 @@ public class JobReader {
     }
 
     // All the Exceptions written below
-    public static void controlBracket(int lineCount,int controlIndex,int bracetIndex,int bracketType) throws  Exception {
-        if (bracketType == 0) {
-            if (bracetIndex > controlIndex) {
-                throw new Exception("Line " + lineCount + ": There is no '(' at correct place. ");
-            } else if (bracetIndex == -1) {
-                throw new Exception("Line " + lineCount + ": There is no '(' at correct place. ");
-            }
+    public static void controlBracket(String bracketType) throws  Exception {
 
+        if (bracketType.equals("(")) {
+            throw new Exception("There is no '(' at correct place. ");
+        } else if (bracketType.equals(")")) {
+            throw new Exception("There is no ')' at correct place. ");
         }
     }
     public static void alreadyDeclaredJob(int lineCount, String jobID) throws Exception{
