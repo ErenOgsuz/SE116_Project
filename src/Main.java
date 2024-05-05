@@ -44,6 +44,27 @@ public class Main {
         JobReader.readJobs();
         StationReader.readStations();
         JobFileReader.readJobsFromFile();
-        EventFlow.eventFlow();
+        //EventFlow.eventFlow(); //Commented for now
+        JobType J1 = new JobType("J1", taskTypes);
+        JobType J2 = new JobType("J2", taskTypes);
+        JobType J3 = new JobType("J3", taskTypes);
+
+        jobs.add(new Job("Job1", J1, 1, 4));
+        jobs.add(new Job("Job1", J2, 5, 5));
+        jobs.add(new Job("Job1", J3, 10, 6));
+
+        for (Job j: jobs) {
+            if (j.getState().equals("Waiting..")) {
+                System.out.println("Job " + j.getJobId() + " is waiting to be executed.");
+                if (jobs.indexOf(j) - 1 >= 0) System.out.println("Previous job " + jobs.get(jobs.indexOf(j) - 1).getJobId() + " is waiting to be executed.");
+            }
+            else if (j.getState().equals("Executing..")) {
+                System.out.println("Job " + j.getJobId() + "is being executed.");
+            }
+            System.out.println("Job ID: " + j.getJobId() + ", Deadline: " + j.getDeadline());
+            System.out.println("Deadline deviation: " + j.getDelayTime());
+            j.getExecutingTask().setStateDone();
+            System.out.println(j.getState());
+        }
     }
 }

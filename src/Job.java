@@ -1,5 +1,7 @@
 import java.time.LocalTime;
 import java.time.Duration;
+import java.util.ArrayList;
+
 
 public class Job {
     private final String jobId;
@@ -68,9 +70,17 @@ public class Job {
                 executingTask=task;
                 break;
             }
+            else {
+                executingTask = jobTypeId.getTasks().get(0);
+            }
         }
     }
     public Task getExecutingTask(){
+        for (Task t: this.jobTypeId.getTasks()) {
+            if (t.getState().equals("Executing..")) {
+                this.executingTask = t;
+            }
+        }
         return executingTask;
     }
 
@@ -86,11 +96,14 @@ public class Job {
     }
 
     public Task getWaitingToExecute(){
+        int indexOfCurrent = executingTask.getJobType().getTasks().indexOf(executingTask);
+        waitingToExecute = executingTask.getJobType().getTasks().get(indexOfCurrent + 1);
         return waitingToExecute;
     }
 
     public double getDelayTime(){
-        delayTime = jobTypeId.getTasks().getLast().getFinishTime()-this.deadline;
+        ArrayList<Task> jobTasks = jobTypeId.getTasks();
+        delayTime = jobTasks.get(jobTasks.size() - 1).getFinishTime()-this.deadline;
         return delayTime;
     }
 

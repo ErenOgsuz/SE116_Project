@@ -36,7 +36,7 @@ public class JobFileReader {
                     }
                 }
                 if(!valid){
-                    invaildJobType(lineNumber,tokens[1]);
+                    invalidJobType(lineNumber,tokens[1]);
                 }
 
                 int startTime;
@@ -96,7 +96,7 @@ public class JobFileReader {
         throw new Exception("Semantic error on line " +  lineCount + ": negative duration " +  duration);
     }
 
-    public static void invaildJobType(int lineCount, String jobType) throws Exception{
+    public static void invalidJobType(int lineCount, String jobType) throws Exception{
         throw new Exception("Line: "+lineCount+" The"+ jobType+" is not a valid name.");
     }
 }
