@@ -93,6 +93,6 @@ public class JobFileReader {
     }
 
     public static void invalidJobType(int lineCount, String jobType) throws Exception{
-        throw new Exception("Line: "+lineCount+" The"+ jobType+" is not a valid name.");
+        throw new Exception("Line: "+lineCount+" The "+ jobType+" is not a valid name.");
     }
 }

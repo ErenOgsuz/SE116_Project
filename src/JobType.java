@@ -13,6 +13,11 @@ public class JobType {
         this.tasks = tasks;
     }
 
+    public int getTaskIndex() {
+        return taskIndex;
+    }
+
+
     public JobType(String jobTypeID){
         this.jobTypeID=jobTypeID;
     }

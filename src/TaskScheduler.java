@@ -22,7 +22,9 @@ public class TaskScheduler {
             }
         }
 
-        task.setStation(chooseStationRandomly(suitableStations)); // Here, we randomly select a suitable station
+        Station station = (chooseStationRandomly(suitableStations));
+        task.setStation(station); // Here, we randomly select a suitable station
+        station.addTask(task); // Add task to stations targetTasks
 
         System.out.println("The suitable station is founded.");
 

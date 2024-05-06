@@ -18,9 +18,9 @@ public class EventFlow {
             Main.events.add(new Event(job,job.getJobType(),job.getStartTime()));
         }
 
-        for(Event e : Main.events){
-            System.out.println(e.getJobType().getJobID());
-        }
+        /*for(Event e : Main.events){
+            System.out.println(e.getJob().getJobId());
+        }*/
 
         Collections.sort(Main.events, new Comparator<Event>() {
             @Override
@@ -30,9 +30,9 @@ public class EventFlow {
             }
         });
 
-        for(Event e : Main.events){
-            System.out.println(e.getJobType().getJobID());
-        }
+        /*for(Event e : Main.events){
+            System.out.println(e.getJob().getJobId());
+        }*/
 
         Event nextEvent;
         int eventCount=0;
@@ -41,18 +41,29 @@ public class EventFlow {
             nextEvent=Main.events.get(eventCount);
 
             if(nextEvent.getEventType().equals("JobStarting")) {
+                System.out.println(nextEvent.getJob().getJobId() + " has started!");
+                System.out.println("First task getting started");
                 // select the first task's station..
                 TaskScheduler.findSuitableStation(nextEvent.getJobType().getTasks().getFirst());
                 // the station's currentTask, desks for that event rearrange -> and the executing task will create a new event
-            }
-            if(nextEvent.getEventType().equals("TaskStarting")) {
+                for(Station s : Main.stationsTypes){
+                    if(s.getTargetTasks().size()>0){
+                        s.pickTask(nextEvent.getEventStartTime()); // This will create new Task events.
+                    }
+                }
+
+            }else if(nextEvent.getEventType().equals("TaskStarting")) {
+                System.out.println(nextEvent.getTask().getTaskTypeID() + " has started!");
                 // give required info about first event at the list
+                // req 6: display the state of the station
+            }else if(nextEvent.getEventType().equals("TaskFinished")){
+                System.out.println(nextEvent.getTask().getTaskTypeID() + " has finished!");
                 // the task's state and the executing task for the job of the task will rearrange
                 // the station's currentTask, desks for that event rearrange -> and the executing task will create a new event
-                //req 6: display the state of the station
+                // req 6: display the state of the station
                 // req 6: find a new task for the station
                 // and select the following task for the completed task's job.
-                // find a station for that task ?
+                // find a station for that task
                 // if there is no task for mentioned job add 1 to finishedJob and
                 // req 5: display the resulting state of the job. Like "it ended 1 minute before the deadline or after 2 minutes.."
             }
@@ -65,6 +76,11 @@ public class EventFlow {
                     return Double.compare(e1.getEventStartTime(), e2.getEventStartTime());
                 }
             });
+
+            /*for(Event e : Main.events){
+                System.out.println(e.getEventType() + " " + e.getEventStartTime());
+            }*/
+
             // rearrange the nextEvent
             eventCount++;
 

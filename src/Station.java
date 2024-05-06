@@ -8,8 +8,8 @@ public abstract class Station {
     private boolean isFull;
     private int speed;
     private ArrayList<Task> tasksCanDo; // station can handle these tasks
-    private ArrayList<Task> targetTasks; //station took these tasks but they wait for executing tasks
-    private ArrayList<Task> currentTasks; // station execute these tasks
+    private ArrayList<Task> targetTasks = new ArrayList<Task>(); //station took these tasks but they wait for executing tasks
+    private ArrayList<Task> currentTasks = new ArrayList<Task>(); // station execute these tasks
     private int currenttaskno; // it is for executing tasks
 
     //private boolean[] desks;// capacity of the station is the size.
@@ -59,8 +59,8 @@ public abstract class Station {
     }
 
     // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
-    public void addTask(Task task,Job job,JobType jobType) {
-        // set the task to the job to create event
+    public void addTask(Task task) {
+        /*// set the task to the job to create event
         task.setJob(job);
         // set the task to the jobType to create event
         task.setJobType(jobType);
@@ -71,7 +71,8 @@ public abstract class Station {
             isFull = false; // Station is full
         } else {
             isFull = true; // Station still has capacity
-        }
+        }*/
+        this.targetTasks.add(task);
     }
 
     public void displayState(){
