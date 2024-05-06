@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Job {
     private final String jobId;
-    private final JobType jobTypeId; // "Has-a"jobType
+    private final JobType jobType; // "Has-a"jobType
     private final double startTime;
     private final double duration;
     private double deadline;
@@ -14,9 +14,9 @@ public class Job {
     private Task waitingToExecute;
     private double delayTime;
 
-    public Job(String jobId, JobType jobTypeId, int startTime, int duration) {
+    public Job(String jobId, JobType jobType, double startTime, double duration) {
         this.jobId = jobId;
-        this.jobTypeId = jobTypeId;
+        this.jobType = jobType;
         this.startTime = startTime;
         this.duration = duration;
         this.state="Waiting..";
@@ -27,8 +27,8 @@ public class Job {
         return jobId;
     }
 
-    public JobType getJobTypeId() {
-        return jobTypeId;
+    public JobType getJobType() {
+        return jobType;
     }
 
     public double getStartTime() {
@@ -50,12 +50,12 @@ public class Job {
             this.state="Executing..";
         }
         int countDone=0;
-        for(Task task:jobTypeId.getTasks()){
+        for(Task task:jobType.getTasks()){
             if(task.getState().contains("Done.")){
                 countDone++;
             }
         }
-        if(countDone==jobTypeId.getTasks().size()){
+        if(countDone==jobType.getTasks().size()){
             state="Done.";
         }
     }
@@ -65,18 +65,18 @@ public class Job {
     }
 
     public void setExecutingTask(){
-        for(Task task:jobTypeId.getTasks()){
+        for(Task task:jobType.getTasks()){
             if(task.getState().contains("Executing..")){
                 executingTask=task;
                 break;
             }
             else {
-                executingTask = jobTypeId.getTasks().get(0);
+                executingTask = jobType.getTasks().get(0);
             }
         }
     }
     public Task getExecutingTask(){
-        for (Task t: this.jobTypeId.getTasks()) {
+        for (Task t: this.jobType.getTasks()) {
             if (t.getState().equals("Executing..")) {
                 this.executingTask = t;
             }
@@ -85,11 +85,11 @@ public class Job {
     }
 
     public void setWaitingToExecute(){
-        int size = jobTypeId.getTasks().size();
+        int size = jobType.getTasks().size();
         for (int i = 0; i < size; i++) {
-            Task task = jobTypeId.getTasks().get(i);
+            Task task = jobType.getTasks().get(i);
             if (task.getState().contains("Executing..")) {
-                waitingToExecute =jobTypeId.getTasks().get(i+1) ;
+                waitingToExecute =jobType.getTasks().get(i+1) ;
                 break;
             }
         }
@@ -102,7 +102,7 @@ public class Job {
     }
 
     public double getDelayTime(){
-        ArrayList<Task> jobTasks = jobTypeId.getTasks();
+        ArrayList<Task> jobTasks = jobType.getTasks();
         delayTime = jobTasks.get(jobTasks.size() - 1).getFinishTime()-this.deadline;
         return delayTime;
     }

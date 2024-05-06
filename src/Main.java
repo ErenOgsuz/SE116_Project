@@ -44,6 +44,7 @@ public class Main {
         JobReader.readJobs();
         StationReader.readStations();
         JobFileReader.readJobsFromFile();
+        //EventFlow.eventFlow();
         //EventFlow.eventFlow(); //Commented for now
         /*JobType J1 = new JobType("J1", taskTypes);
         JobType J2 = new JobType("J2", taskTypes);

@@ -7,30 +7,27 @@ public class Event {
     private double taskStartTime;
     private double eventStartTime;
     private Job job;
-    private JobType JobType;
+    private JobType jobType;
     private Task task;
 
     public Event(Job job,JobType jobType,double jobStartTime){
             eventType="JobStarting";
             this.job=job;
             this.eventStartTime=jobStartTime;
+            this.jobType = jobType;
     }
 
     public Event(Job job, JobType jobType, Task task, Station station, double deadLine, double eventStartTime){
         eventType="TaskStarting";
         this.deadLine=deadLine;
         this.job=job;
-        this.JobType=jobType;
+        this.jobType=jobType;
         this.task=task;
         this.station=station;
         this.eventStartTime=eventStartTime;
     }
     public JobType getJobType() {
-        return JobType;
-    }
-
-    public void setJobType(JobType jobType) {
-        JobType = jobType;
+        return jobType;
     }
 
     public Job getJob() {

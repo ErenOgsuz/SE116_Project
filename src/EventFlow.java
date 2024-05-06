@@ -9,16 +9,17 @@ public class EventFlow {
         double starTime;
         double deadLine;
         double jobStartTime;
-        Job job;
         JobType jobType;
         Task task;
 
         // create the events to trigger start the jobs..
-        for(Job job1 :Main.jobs){
-            job=Main.jobs.getFirst();
-            jobStartTime=job.getStartTime();
-            jobType=job.getJobTypeId();
-            Main.events.add(new Event(job,jobType,jobStartTime));
+        for(Job job :Main.jobs){
+            //Job job1 = new Job(job.getJobId(),job.getJobType(),job.getStartTime(),job.getDuration());
+            Main.events.add(new Event(job,job.getJobType(),job.getStartTime()));
+        }
+
+        for(Event e : Main.events){
+            System.out.println(e.getJobType().getJobID());
         }
 
         Collections.sort(Main.events, new Comparator<Event>() {
@@ -29,10 +30,16 @@ public class EventFlow {
             }
         });
 
-        Event nextEvent=Main.events.getFirst();
-        int eventCount=1;
+        for(Event e : Main.events){
+            System.out.println(e.getJobType().getJobID());
+        }
+
+        Event nextEvent;
+        int eventCount=0;
 
         do{
+            nextEvent=Main.events.get(eventCount);
+
             if(nextEvent.getEventType().equals("JobStarting")) {
                 // select the first task's station..
                 TaskScheduler.findSuitableStation(nextEvent.getJobType().getTasks().getFirst());
@@ -60,14 +67,14 @@ public class EventFlow {
             });
             // rearrange the nextEvent
             eventCount++;
-            nextEvent=Main.events.get(eventCount);
+
 
             // if the finishedJobs equal to Main.jobs.size(), theAllJobsFinished will false.
             if(finishedJobs== Main.jobs.size()){
                 allJobsNotFinished=false;
             }
 
-        }while(allJobsNotFinished);
+        }while(allJobsNotFinished || eventCount == Main.events.size() - 1);
 
         // display all jobs states: req 9
     }

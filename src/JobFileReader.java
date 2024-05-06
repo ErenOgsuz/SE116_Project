@@ -9,7 +9,6 @@ import java.util.Set;
 public class JobFileReader {
     public static void readJobsFromFile() {
         String jobFilePath = "JobFile.txt"; // The path of Job file
-        ArrayList<Job> jobList = new ArrayList<>();
         Set<String> jobIds = new HashSet<>();
         int lineNumber = 1;
 
@@ -25,13 +24,13 @@ public class JobFileReader {
                     syntaxError(lineNumber, tokens);
                 }
 
-                JobType jobTypeId= new JobType();
+                JobType jobType= new JobType();
                 // Step 5: Extract job ID, job type ID, start time, and duration
                 String jobId = tokens[0];
                 boolean valid=false;
-                for (JobType jobType: Main.jobTypes) {
-                    if (jobType.getJobID().equals(tokens[1])) {
-                        jobTypeId = jobType;
+                for (JobType jobTypes: Main.jobTypes) {
+                    if (jobTypes.getJobID().equals(tokens[1])) {
+                        jobType = new JobType(jobTypes.getJobID(),jobTypes.getTasks());
                         valid =true;
                     }
                 }
@@ -60,14 +59,14 @@ public class JobFileReader {
                 }
 
                 // Step 7: Create a Job object
-                Job job = new Job(jobId, jobTypeId, startTime, duration);
+                Job job = new Job(jobId, jobType, startTime, duration);
 
                 // Step 8: Calculate the job's deadline
                 int deadline = startTime + duration;
                 System.out.println("Job ID: " + jobId + ", Deadline: " + deadline);
 
                 // Step 9: Add the Job object to the list
-                jobList.add(job);
+                Main.jobs.add(job);
 
                 lineNumber++;
             }
@@ -78,9 +77,6 @@ public class JobFileReader {
             System.err.println("Error reading file: " + e.getMessage());
             // Handle the error appropriately
         }
-
-        // Return the list of Job objects
-        Main.jobs = jobList;
     }
 
     public static void syntaxError(int lineCount, String[] tokens) throws Exception{
