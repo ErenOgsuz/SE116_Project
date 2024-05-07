@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    protected static ArrayList<Task> taskTypes =new ArrayList<Task>();
-    protected static ArrayList<JobType> jobTypes =new ArrayList<JobType>();
+    protected static ArrayList<Task> taskTypes = new ArrayList<Task>();
+    protected static ArrayList<JobType> jobTypes = new ArrayList<JobType>();
     protected static ArrayList<Station> stationsTypes = new ArrayList<Station>();
     protected static ArrayList<Job> jobs = new ArrayList<Job>();
-    protected static ArrayList<Event> events= new ArrayList<Event>();
+    protected static ArrayList<Event> events = new ArrayList<Event>();
 
     public static void main(String[] args) {
         String jobFilePath = "JobFile.txt"; // The path of Job file
@@ -67,5 +67,20 @@ public class Main {
             j.getExecutingTask().setStateDone();
             System.out.println(j.getState());
         }*/
+
+        // Calculate average job tardiness
+        double averageTardiness = ReportGenerator.calculateAverageJobTardiness(jobs);
+        System.out.println("Average Job Tardiness: " + averageTardiness);
+
+        //COMMENTED BELOW DUE TO ISSUES I cannot currently resolve..
+
+        // Calculate station utilization
+        //ReportGenerator.calculateStationUtilization(stations, totalSimulationTime);
+
+        // Print station utilization
+        //System.out.println("Station Utilization:");
+        //for (Station station : stations) {
+        //System.out.println(station.getStationID() + ": " + station.getUtilization());
+
+        }
     }
-}
