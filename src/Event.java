@@ -9,8 +9,8 @@ public class Event {
     private JobType jobType;
     private Task task;
 
-    public Event(Job job,JobType jobType,double jobStartTime){
-            eventType="JobStarting";
+    public Event(Job job,JobType jobType,double jobStartTime, String eventType){
+            this.eventType=eventType;
             this.job=job;
             this.eventStartTime=jobStartTime;
             this.jobType = jobType;

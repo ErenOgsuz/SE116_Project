@@ -8,9 +8,9 @@ public abstract class Station {
     private boolean isFull;
     private int speed;
     private ArrayList<Task> tasksCanDo; // station can handle these tasks
-    private ArrayList<Task> targetTasks = new ArrayList<Task>(); //station took these tasks but they wait for executing tasks
-    private ArrayList<Task> currentTasks = new ArrayList<Task>(); // station execute these tasks
-    private int currenttaskno; // it is for executing tasks
+    private ArrayList<Task> targetTasks; //station took these tasks but they wait for executing tasks
+    private ArrayList<Task> currentTasks; // station execute these tasks
+    private int currenttaskno = 0; // it is for executing tasks
 
     //private boolean[] desks;// capacity of the station is the size.
 
@@ -20,6 +20,8 @@ public abstract class Station {
         this.tasksCanDo = tasksCanDo;
         this.speed = 1;
         maxCapacity = capacity;
+        this.targetTasks = new ArrayList<Task>();
+        this.currentTasks = new ArrayList<Task>();
         //boolean[] desks= new boolean[capacity];
     }
 
@@ -29,16 +31,18 @@ public abstract class Station {
         this.tasksCanDo = tasksCanDo;
         this.speed=1;
         maxCapacity=1;
+        this.targetTasks = new ArrayList<Task>();
+        this.currentTasks = new ArrayList<Task>();
         //boolean[] desks= new boolean[1];
     }
 
     public Station() {
     }
 
-    public void setCurrenttask(int currenttask) {
+    public void setCurrentTaskNo(int currenttask) {
         this.currenttaskno = currenttask;
     }
-    public int getCurrenttask() {
+    public int getCurrentTaskNo() {
         return currenttaskno;
     }
     public String getStationID() {return stationID;}
@@ -59,21 +63,21 @@ public abstract class Station {
     }
 
     // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
-    public void addTask(Task task,Job job,JobType jobType) {
+    public void addTask(Task task) {
         // set the task to the job to create event
-        task.setJob(job);
+        //task.setJob(job);
         // set the task to the jobType to create event
-        task.setJobType(jobType);
+        //task.setJobType(jobType);
         // Set the station of the task to this station
-        task.setStation(this);
+        //task.setStation(this);
         // Update the state of the station
         if (currenttaskno >= maxCapacity) {
             isFull = false; // Station is full
         } else {
             isFull = true; // Station still has capacity
         }
-        this.targetTasks.add(task);
-        this.currenttaskno++;
+        //this.targetTasks.add(task);
+        //this.currenttaskno++;
         task.setStation(this);
     }
 
@@ -82,12 +86,12 @@ public abstract class Station {
             System.out.println("Station is idle");
         }else{
             for (Task s : currentTasks){
-                System.out.println("Task " + s.getTaskTypeID() + "is running");
+                System.out.println("Task " + s.getTaskTypeID() + " is running in " + this.stationID);
             }
             for (Task s : targetTasks){
                 System.out.print("Task " + s.getTaskTypeID() + ", ");
             }
-            System.out.print("are waiting in line");
+            System.out.print("are waiting in line in " + this.stationID +"\n");
         }
     }
 

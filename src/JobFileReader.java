@@ -60,6 +60,10 @@ public class JobFileReader {
 
                 // Step 7: Create a Job object
                 Job job = new Job(jobId, jobType, startTime, duration);
+                for(Task t : job.getJobType().getTasks()){
+                    t.setJob(job);
+                    t.setJobType(job.getJobType());
+                }
 
                 // Step 8: Calculate the job's deadline
                 int deadline = startTime + duration;

@@ -8,13 +8,13 @@ public class FifoMultiStation extends Station{
     }
 
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
-    public void addTask(Task task,Job job,JobType jobType){
+    public void addTask(Task task){
         // Add the task to the station's task list
         ArrayList<Task> existingTargetTasks = this.getTargetTasks();
         existingTargetTasks.add(task);
         this.setTargetTasks(existingTargetTasks);
-        getTargetTasks().add(task);
-        super.addTask(task,job,JobType);
+        //getTargetTasks().add(task);
+        super.addTask(task);
     }
 
     // pickTask method is to pick a task from targetTask for that stations, if exists.
@@ -23,10 +23,11 @@ public class FifoMultiStation extends Station{
     // ıt take double startTime, it comes from the ended task's finishTime
     public boolean pickTask(double startTime){
         if (!getTargetTasks().isEmpty()){
-            if(getCurrenttask()<1) {
+            if(getCurrentTaskNo()<1) {
                 Task newTask = getTargetTasks().getFirst();
                 getCurrentTasks().add(newTask);
-                setCurrenttask(getCurrenttask()+1);
+                setCurrentTaskNo(getCurrentTaskNo()+1);
+                getTargetTasks().removeFirst();
                 /*if (!getTargetTasks().isEmpty()) {
                     ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
                     setCurrentTasks(newCurrentTasks);
@@ -38,7 +39,7 @@ public class FifoMultiStation extends Station{
                 Main.events.add(new Event(newTask, newTask.getStation(), newTask.getStarTime(),"TaskStarting"));
                 Main.events.add(new Event(newTask, newTask.getStation(), newTask.getFinishTime(), "TaskFinished"));
                 newTask.setStateExecuting();
-                displayState();
+                //displayState();
                 return true;
             }else{
                 return false;
@@ -52,7 +53,7 @@ public class FifoMultiStation extends Station{
         double[] hasTimeToFinish = new double[getMaxCapacity()]; // for desks(based on capacity) of stations
 
         // to know how much time is left
-        for(int i=0;i<=getCurrenttask();++i){
+        for(int i=0;i<=getCurrentTaskNo();++i){
           hasTimeToFinish[i]=getCurrentTasks().get(i).getFinishTime()-currentTime;
         }
 

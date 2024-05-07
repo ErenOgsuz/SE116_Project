@@ -13,7 +13,7 @@ public class TaskScheduler {
         this.task=task;
     }
 
-    public static void findSuitableStation(Task task) {
+    public static Station findSuitableStation(Task task) {
         List<Station> suitableStations = new ArrayList<>();
 
         for (Station station : Main.stationsTypes) {
@@ -27,7 +27,7 @@ public class TaskScheduler {
         station.addTask(task); // Add task to stations targetTasks
 
         System.out.println("The suitable station is founded.");
-
+        return station;
     }
 
     private static Station chooseStationRandomly(List<Station> stations) {

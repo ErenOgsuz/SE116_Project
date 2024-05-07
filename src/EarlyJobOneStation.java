@@ -9,11 +9,11 @@ public class EarlyJobOneStation extends Station {
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
     public void addTask(Task task){
         // Add the task to the station's task list
-        /*for(int i=0;i<getTargetTasks().size();++i){
+        for(int i=0;i<getTargetTasks().size();++i){
             if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
                 getTargetTasks().add(i,task);
             }
-        }*/
+        }
         super.addTask(task);
     }
 
@@ -23,10 +23,11 @@ public class EarlyJobOneStation extends Station {
     // ıt take double startTime, it comes from the ended task's finishTime
     public boolean pickTask(double startTime){
         if (!getTargetTasks().isEmpty()){
-            if(getCurrenttask()<1) {
+            if(getCurrentTaskNo()<1) {
                 Task newTask = getTargetTasks().getFirst();
                 getCurrentTasks().add(newTask);
-                setCurrenttask(getCurrenttask()+1);
+                setCurrentTaskNo(getCurrentTaskNo()+1);
+                getTargetTasks().removeFirst();
                 /*if (!getTargetTasks().isEmpty()) {
                     ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
                     setCurrentTasks(newCurrentTasks);
@@ -38,7 +39,7 @@ public class EarlyJobOneStation extends Station {
                 Main.events.add(new Event(newTask, newTask.getStation(), newTask.getStarTime(),"TaskStarting"));
                 Main.events.add(new Event(newTask, newTask.getStation(), newTask.getFinishTime(), "TaskFinished"));
                 newTask.setStateExecuting();
-                displayState();
+                //displayState();
                 return true;
             }else{
                 return false;

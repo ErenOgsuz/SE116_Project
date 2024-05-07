@@ -17,6 +17,9 @@ public class JobType {
         return taskIndex;
     }
 
+    public void increaseTaskIndex(){
+        this.taskIndex++;
+    }
 
     public JobType(String jobTypeID){
         this.jobTypeID=jobTypeID;
