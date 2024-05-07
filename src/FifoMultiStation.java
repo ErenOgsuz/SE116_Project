@@ -8,10 +8,13 @@ public class FifoMultiStation extends Station{
     }
 
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
-    public void addTask(Task task){
+    public void addTask(Task task,Job job,JobType jobType){
         // Add the task to the station's task list
+        ArrayList<Task> existingTargetTasks = this.getTargetTasks();
+        existingTargetTasks.add(task);
+        this.setTargetTasks(existingTargetTasks);
         getTargetTasks().add(task);
-        super.addTask(task);
+        super.addTask(task,job,JobType);
     }
 
     // pickTask method is to pick a task from targetTask for that stations, if exists.

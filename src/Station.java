@@ -59,8 +59,8 @@ public abstract class Station {
     }
 
     // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
-    public void addTask(Task task) {
-        /*// set the task to the job to create event
+    public void addTask(Task task,Job job,JobType jobType) {
+        // set the task to the job to create event
         task.setJob(job);
         // set the task to the jobType to create event
         task.setJobType(jobType);
@@ -71,8 +71,10 @@ public abstract class Station {
             isFull = false; // Station is full
         } else {
             isFull = true; // Station still has capacity
-        }*/
+        }
         this.targetTasks.add(task);
+        this.currenttaskno++;
+        task.setStation(this);
     }
 
     public void displayState(){
