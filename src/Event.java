@@ -16,11 +16,11 @@ public class Event {
             this.jobType = jobType;
     }
 
-    public Event(Task task, Station station, double eventStartTime, String eventType){
+    public Event(Task task, double eventStartTime, String eventType){
         this.eventType=eventType; // "TaskStarting" or "TaskFinished"
-        this.deadLine=deadLine;
+        this.deadLine=eventStartTime+ task.getDuration();
         this.task=task;
-        this.station=station;
+        this.station=task.getStation();
         this.eventStartTime=eventStartTime;
     }
 

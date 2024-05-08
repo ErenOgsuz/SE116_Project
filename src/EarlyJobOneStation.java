@@ -9,12 +9,21 @@ public class EarlyJobOneStation extends Station {
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
     public void addTask(Task task){
         // Add the task to the station's task list
+        System.out.println(task.getTaskTypeID());
+        ArrayList<Task> existingTargetTasks = new ArrayList<Task>();
+        existingTargetTasks =this.getTargetTasks();
         for(int i=0;i<getTargetTasks().size();++i){
             if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
-                getTargetTasks().add(i,task);
+                existingTargetTasks.add(i,task);
             }
         }
-        super.addTask(task);
+        System.out.println("add çalışıyor"+existingTargetTasks.getFirst().getTaskTypeID());
+        this.setTargetTasks(existingTargetTasks);
+        if (getCurrentTaskNo() >= getMaxCapacity()) {
+            setFull(false);// Station is full
+        } else {
+            setFull(true); // Station still has capacity
+        }
     }
 
     // pickTask method is to pick a task from targetTask for that stations, if exists.
@@ -36,8 +45,8 @@ public class EarlyJobOneStation extends Station {
                 newTask.setDuration(calculateDuration(newTask));
                 newTask.setStartTime(startTime);
                 newTask.setFinishTime(startTime+ newTask.getDuration());
-                Main.events.add(new Event(newTask, newTask.getStation(), newTask.getStarTime(),"TaskStarting"));
-                Main.events.add(new Event(newTask, newTask.getStation(), newTask.getFinishTime(), "TaskFinished"));
+                Main.events.add(new Event(newTask, newTask.getStarTime(),"TaskStarting"));
+                Main.events.add(new Event(newTask, newTask.getFinishTime(), "TaskFinished"));
                 newTask.setStateExecuting();
                 //displayState();
                 return true;
@@ -48,17 +57,21 @@ public class EarlyJobOneStation extends Station {
     }
 
     // calculateStartTime is for find the optimal station
-    public double calculateStartTime(Task task,double currentTime) {
-        double startTime = currentTime+getCurrentTasks().getFirst().getFinishTime()-currentTime;
+    public double calculateFinishTime(Task task,double currentTime) {
+        double startTime=0.0;
 
+        if(getCurrentTaskNo()!=0) {
+            startTime = currentTime + getCurrentTasks().getFirst().getFinishTime() - currentTime;
+        }
         for (int i = 0; i < getTargetTasks().size(); i++) {
            if(getTargetTasks().get(i).getJob().getDeadline()<task.getJob().getDeadline()) {
-               startTime += calculateOptimalDuration(task.getStation().getTasks().get(i));
+               startTime += calculateOptimalDuration(this.getTargetTasks().get(i));
            }else{
                break;
            }
         }
-        System.out.println("Start time for the job is: " + startTime);
+        startTime+=calculateDuration(task);
+
         return startTime;
     }
 }

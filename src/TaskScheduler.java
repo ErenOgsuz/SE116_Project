@@ -13,7 +13,7 @@ public class TaskScheduler {
         this.task=task;
     }
 
-    public static Station findSuitableStation(Task task) {
+    public static Station findSuitableStation(Task task,double currentTime) {
         List<Station> suitableStations = new ArrayList<>();
 
         for (Station station : Main.stationsTypes) {
@@ -22,27 +22,25 @@ public class TaskScheduler {
             }
         }
 
-        Station station = (chooseStationRandomly(suitableStations));
-        task.setStation(station); // Here, we randomly select a suitable station
-        station.addTask(task); // Add task to stations targetTasks
+        ArrayList<Double> possibleTimes= new ArrayList<Double>();
 
-        System.out.println("The suitable station is founded.");
-        return station;
-    }
+        Station correctStation=suitableStations.getFirst();
+        double finishTime=correctStation.calculateFinishTime(task,currentTime);
 
-    private static Station chooseStationRandomly(List<Station> stations) {
-        // Round-robin station selection
-        // Uncomment this block if you want to use round-robin
-        /*
-        int index = roundRobinIndex % stations.size();
-        roundRobinIndex++;
-        return stations.get(index);
-        */
+        for(Station station: suitableStations){
+            //System.out.println(station.getStationID());
+           // System.out.println(finishTime);
+           // System.out.println(station.calculateFinishTime(task,currentTime));
+            if(station.calculateFinishTime(task,currentTime)<finishTime){
+                finishTime=station.calculateFinishTime(task,currentTime);
+                correctStation=station;
+                System.out.println(finishTime+" it is for "+ correctStation.getStationID());
+            }
+        }
+        task.setStation(correctStation); // Here, we set the task's station
+        correctStation.addTask(task); // Add task to stations targetTasks
 
-        // Random station selection
-        int index = random.nextInt(stations.size());
-        return stations.get(index);
-        // if the chosen station is not working like fifo set the times of tasks and rearrange the event times.
-        //
+        System.out.println("The "+correctStation.getStationID()+" station will execute : "+ task.getTaskTypeID()+" of "+task.getJob().getJobId());
+        return correctStation;
     }
 }

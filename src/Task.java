@@ -34,55 +34,38 @@ public class Task {
     public String getTaskTypeID() {
         return taskTypeID;
     }
-
     public void setTaskTypeID(String taskTypeID) {
         this.taskTypeID = taskTypeID;
     }
-
     public double getSize() {
         return size;
     }
-
-    public void setSize(double size) {
-        this.size = size;
-    }
-
+    public void setSize(double size) {this.size = size;}
     public Station getStation() {
         return station;
     }
-
     public void setStation(Station station) {
         this.station = station;
     }
-
     public double getDuration() {return duration;}
-
     public void setDuration(double duration) {this.duration = duration;}
     public double getStartTime() {return startTime;}
-
     public void setStartTime(double startTime) {this.startTime = startTime;}
     public double getStarTime(){
         return  startTime;
     }
-
     public double getSpeed() {
         return speed;
     }
-
     public void setSpeed(double speed) {
         this.speed = speed;
     }
     public double getPlusMinus() {
         return plusMinus;
     }
-
     public void setPlusMinus(double plusMinus) {
         this.plusMinus = plusMinus;
     }
-/*public void setFinishTime(){
-        finishTime=startTime.plus(duration);
-    }*/
-
     public double getFinishTime(){
         return  finishTime;
     }
@@ -99,15 +82,12 @@ public class Task {
     public JobType getJobType() {
         return jobType;
     }
-
     public void setJobType(JobType jobType) {
         this.jobType = jobType;
     }
-
     public Job getJob() {
         return job;
     }
-
     public void setJob(Job job) {
         this.job = job;
     }

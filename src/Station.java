@@ -39,6 +39,13 @@ public abstract class Station {
     public Station() {
     }
 
+    public boolean isFull() {
+        return isFull;
+    }
+
+    public void setFull(boolean full) {
+        isFull = full;
+    }
     public void setCurrentTaskNo(int currenttask) {
         this.currenttaskno = currenttask;
     }
@@ -63,23 +70,7 @@ public abstract class Station {
     }
 
     // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
-    public void addTask(Task task) {
-        // set the task to the job to create event
-        //task.setJob(job);
-        // set the task to the jobType to create event
-        //task.setJobType(jobType);
-        // Set the station of the task to this station
-        //task.setStation(this);
-        // Update the state of the station
-        if (currenttaskno >= maxCapacity) {
-            isFull = false; // Station is full
-        } else {
-            isFull = true; // Station still has capacity
-        }
-        //this.targetTasks.add(task);
-        //this.currenttaskno++;
-        task.setStation(this);
-    }
+    public abstract void addTask(Task task) ;
 
     public void displayState(){
         if(targetTasks.isEmpty()){
@@ -96,7 +87,7 @@ public abstract class Station {
     }
 
     public abstract boolean pickTask(double startTime);
-    public abstract double calculateStartTime(Task task, double currentTime);
+    public abstract double calculateFinishTime(Task task, double currentTime);
 
     // to check the taskType can handle the taskType
     public boolean canExecuteTaskType(String taskType) {

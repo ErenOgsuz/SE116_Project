@@ -10,12 +10,20 @@ public class EarlyJobMultiStation extends Station{
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
     public void addTask(Task task){
         // Add the task to the station's task list
+        ArrayList<Task> existingTargetTasks = new ArrayList<Task>();
+        existingTargetTasks =this.getTargetTasks();
         for(int i=0;i<getTargetTasks().size();++i){
             if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
-                getTargetTasks().add(i,task);
+                existingTargetTasks.add(i,task);
             }
         }
-        super.addTask(task);
+        System.out.println("add çalışıyor"+existingTargetTasks.getFirst().getTaskTypeID());
+        this.setTargetTasks(existingTargetTasks);
+        if (getCurrentTaskNo() >= getMaxCapacity()) {
+            setFull(false);// Station is full
+        } else {
+            setFull(true); // Station still has capacity
+        }
     }
 
     // pickTask method is to pick a task from targetTask for that stations, if exists.
@@ -37,8 +45,8 @@ public class EarlyJobMultiStation extends Station{
                 newTask.setDuration(calculateDuration(newTask));
                 newTask.setStartTime(startTime);
                 newTask.setFinishTime(startTime+ newTask.getDuration());
-                Main.events.add(new Event(newTask, newTask.getStation(), newTask.getStarTime(),"TaskStarting"));
-                Main.events.add(new Event(newTask, newTask.getStation(), newTask.getFinishTime(), "TaskFinished"));
+                Main.events.add(new Event(newTask, newTask.getStarTime(),"TaskStarting"));
+                Main.events.add(new Event(newTask,  newTask.getFinishTime(), "TaskFinished"));
                 newTask.setStateExecuting();
                 //displayState();
                 return true;
@@ -49,13 +57,15 @@ public class EarlyJobMultiStation extends Station{
     }
 
     // calculateStartTime is for find the optimal station
-    public double calculateStartTime(Task task, double currentTime) {
+    public double calculateFinishTime(Task task, double currentTime) {
 
         double[] hasTimeToFinish = new double[getMaxCapacity()]; // for desks(based on capacity) of stations
 
         // to know how much time is left
-        for(int i=0;i<=getCurrentTaskNo();++i){
-            hasTimeToFinish[i]=getCurrentTasks().get(i).getFinishTime()-currentTime;
+        if(getCurrentTaskNo()!=0) {
+            for (int i = 0; i <= getCurrentTaskNo(); ++i) {
+                hasTimeToFinish[i] = getCurrentTasks().get(i).getFinishTime() - currentTime;
+            }
         }
 
         // sort the left times to add times of targetTasks
@@ -76,6 +86,8 @@ public class EarlyJobMultiStation extends Station{
 
         // again sort to know fast desk and how much time left for it
         Arrays.sort(hasTimeToFinish);
+
+        hasTimeToFinish[0]+=calculateOptimalDuration(task);
 
         // Returns how much time is left from the first idle table if it will be added now.
         return hasTimeToFinish[0];
