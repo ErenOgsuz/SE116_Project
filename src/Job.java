@@ -14,6 +14,18 @@ public class Job {
     private Task waitingToExecute;
     private double delayTime;
 
+    public void display() {
+        System.out.println("Job ID: " + getJobId() + "\nJop Type: " + getJobType() + "\nStarting time: " + getStartTime()
+                + "\nDuration: " + getDuration() + "\nEnding time: " + getDeadline() + "\nState: " + getState() + "\nCurrent executing task: "
+                + getExecutingTask().getTaskTypeID() + "\nNext task to execute: " + getWaitingToExecute().getTaskTypeID());
+        if (getDelayTime() > 0) {
+            System.out.println("There is " + getDelayTime() + " seconds of delay.");
+        }
+        else {
+            System.out.println("Task is executed in its time.");
+        }
+    }
+
     public Job(String jobId, JobType jobType, double startTime, double duration) {
         this.jobId = jobId;
         this.jobType = jobType;
@@ -44,22 +56,25 @@ public class Job {
     }
 
     public void setState(double time) {
-        if(time<getStartTime()){
-            this.state="Waiting..";
-        }else{
-            this.state="Executing..";
+        if(time < getStartTime()){
+            this.state = "Waiting..";
         }
-        int countDone=0;
-        for(Task task:jobType.getTasks()){
-            if(task.getState().contains("Done.")){
-                countDone++;
+        else if (time > getStartTime() && time < getStartTime() + getDuration()) {
+            this.state = "Executing..";
+        }
+        else if (time >= getStartTime() + getDuration()) {
+            this.state = "Executed..";
+        }
+        int amountofdone = 0;
+        for(Task task: jobType.getTasks()) {
+            if(task.getState().contains("Done.")) {
+                amountofdone++;
             }
         }
-        if(countDone==jobType.getTasks().size()){
-            state="Done.";
+        if(amountofdone == jobType.getTasks().size()) {
+            state = "All tasks are finished.";
         }
     }
-
     public String getState(){
         return state;
     }
@@ -106,5 +121,15 @@ public class Job {
         delayTime = jobTasks.get(jobTasks.size() - 1).getFinishTime()-this.deadline;
         return delayTime;
     }
-
+    public void isJobExecuting(ArrayList<Job> jobs) {
+        for (Job j: jobs) {
+            if (j.getState().equals("Waiting..")) {
+                System.out.println("Job " + j.getJobId() + " is waiting to be executed.");
+                if (jobs.indexOf(j) - 1 >= 0) System.out.println("Previous job " + jobs.get(jobs.indexOf(j) - 1).getJobId() + "is executed.");
+            }
+            else if (j.getState().equals("Executing..")) {
+                System.out.println("Job " + j.getJobId() + "is being executed.");
+            }
+        }
+    }
 }

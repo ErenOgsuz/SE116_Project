@@ -24,7 +24,7 @@ public class TaskScheduler {
 
         ArrayList<Double> possibleTimes= new ArrayList<Double>();
 
-        Station correctStation=suitableStations.getFirst();
+        Station correctStation=suitableStations.get(0);
         double finishTime=correctStation.calculateFinishTime(task,currentTime);
 
         for(Station station: suitableStations){

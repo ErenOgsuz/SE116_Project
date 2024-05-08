@@ -33,10 +33,10 @@ public class EarlyJobOneStation extends Station {
     public boolean pickTask(double startTime){
         if (!getTargetTasks().isEmpty()){
             if(getCurrentTaskNo()<1) {
-                Task newTask = getTargetTasks().getFirst();
+                Task newTask = getTargetTasks().get(0);
                 getCurrentTasks().add(newTask);
                 setCurrentTaskNo(getCurrentTaskNo()+1);
-                getTargetTasks().removeFirst();
+                getTargetTasks().remove(0);
                 /*if (!getTargetTasks().isEmpty()) {
                     ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
                     setCurrentTasks(newCurrentTasks);
@@ -61,7 +61,7 @@ public class EarlyJobOneStation extends Station {
         double startTime=0.0;
 
         if(getCurrentTaskNo()!=0) {
-            startTime = currentTime + getCurrentTasks().getFirst().getFinishTime() - currentTime;
+            startTime = currentTime + getCurrentTasks().get(0).getFinishTime() - currentTime;
         }
         if(!getTargetTasks().isEmpty()){
             for (int i = 0; i < getTargetTasks().size(); i++) {

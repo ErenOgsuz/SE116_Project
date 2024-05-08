@@ -60,7 +60,7 @@ public class EventFlow {
                 nextEvent.getJob().setState(currentTime);
 
                 // select the first task's station and the station's currentTask, desks for that event rearrange
-                TaskScheduler.findSuitableStation(nextEvent.getJobType().getTasks().getFirst(),nextEvent.getEventStartTime());
+                TaskScheduler.findSuitableStation(nextEvent.getJobType().getTasks().get(0),nextEvent.getEventStartTime());
 
             // if The nextEvent is triggering the job to finish
             }else if(nextEvent.getEventType().equals("JobFinished")) {
