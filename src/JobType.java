@@ -5,7 +5,7 @@ public class JobType {
     private int startTime;
     private int duration;
     private ArrayList<Task> tasks;
-    private int taskIndex;
+    private int taskIndex=0;
     private int deadline;
 
     public JobType(String jobTypeID, ArrayList<Task> tasks) {

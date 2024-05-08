@@ -1,24 +1,25 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class EarlyJobMultiStation extends Station{
+public class EarlyJobMultiStation extends Station {
 
-    public EarlyJobMultiStation(String stationID, ArrayList<Task> tasks,int capacity) {
-        super(stationID,tasks,capacity);
+    public EarlyJobMultiStation(String stationID, ArrayList<Task> tasks, int capacity) {
+        super(stationID, tasks, capacity);
     }
 
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
-    public void addTask(Task task){
+    public void addTask(Task task) {
         // Add the task to the station's task list
-        ArrayList<Task> existingTargetTasks = new ArrayList<Task>();
-        existingTargetTasks =this.getTargetTasks();
-        for(int i=0;i<getTargetTasks().size();++i){
-            if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
-                existingTargetTasks.add(i,task);
+        if (!getTargetTasks().isEmpty()) {
+            for (int i = 0; i <= getTargetTasks().size(); ++i) {
+                if (getTargetTasks().get(i).getJob().getDeadline() > task.getJob().getDeadline()) {
+                    this.getTargetTasks().add(i, task);
+                }
             }
+        } else {
+            this.getTargetTasks().add(task);
         }
-        System.out.println("add çalışıyor"+existingTargetTasks.getFirst().getTaskTypeID());
-        this.setTargetTasks(existingTargetTasks);
+
         if (getCurrentTaskNo() >= getMaxCapacity()) {
             setFull(false);// Station is full
         } else {
@@ -63,7 +64,7 @@ public class EarlyJobMultiStation extends Station{
 
         // to know how much time is left
         if(getCurrentTaskNo()!=0) {
-            for (int i = 0; i <= getCurrentTaskNo(); ++i) {
+            for (int i = 0; i < getCurrentTaskNo(); ++i) {
                 hasTimeToFinish[i] = getCurrentTasks().get(i).getFinishTime() - currentTime;
             }
         }

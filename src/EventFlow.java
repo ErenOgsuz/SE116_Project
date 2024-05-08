@@ -54,7 +54,7 @@ public class EventFlow {
             if(nextEvent.getEventType().equals("JobStarting")) {
 
                 System.out.println(nextEvent.getJob().getJobId() + " has started!");
-                System.out.println("First task getting started");
+                System.out.println("First task of "+nextEvent.getJob().getJobId()+" getting started");
 
                 // set the state of job
                 nextEvent.getJob().setState(currentTime);
@@ -88,7 +88,8 @@ public class EventFlow {
                 nextEvent.getTask().setStateDone();
                 // set the current task index for the job which the task finished
                 nextEvent.getTask().getJob().getJobType().increaseTaskIndex();
-                if(nextEvent.getTask().getJob().getJobType().getTaskIndex() >= nextEvent.getTask().getJob().getJobType().getTasks().size()){
+
+                if(nextEvent.getTask().getJob().getJobType().getTaskIndex() <= nextEvent.getTask().getJob().getJobType().getTasks().size()){
                     Main.events.add(new Event(nextEvent.getTask().getJob(),nextEvent.getTask().getJob().getJobType(),nextEvent.getEventStartTime(),"JobFinished"));
                 }
 
@@ -100,7 +101,7 @@ public class EventFlow {
                 // req 6: find a new task for the station
                 nextEvent.getStation().pickTask(nextEvent.getEventStartTime());
                 // and select the following task for the completed task's job.
-                if(nextEvent.getTask().getJobType().getTaskIndex()<=nextEvent.getTask().getJobType().getTasks().size()){
+                if(nextEvent.getTask().getJobType().getTaskIndex()<nextEvent.getTask().getJobType().getTasks().size()){
                     TaskScheduler.findSuitableStation(nextEvent.getTask().getJobType().getTasks().get(nextEvent.getTask().getJobType().getTaskIndex()), nextEvent.getEventStartTime());
                 }
                 // find a station for that task
@@ -111,12 +112,7 @@ public class EventFlow {
             // create new events on station subClasses with pickTask method.
             for(Station s : Main.stationsTypes) {
                 if (s.getMaxCapacity() != s.getCurrentTaskNo()) {
-                    for(Task t:s.getTargetTasks()){
-                        System.out.println("++++");
-                        System.out.println("++"+t.getTaskTypeID()+" ");
-                    }
                     if (!s.getTargetTasks().isEmpty()) {
-                        System.out.println("...");
                         s.pickTask(nextEvent.getEventStartTime()); // This will create new Task events.
                     }
                 }

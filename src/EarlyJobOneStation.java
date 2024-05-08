@@ -9,21 +9,21 @@ public class EarlyJobOneStation extends Station {
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
     public void addTask(Task task){
         // Add the task to the station's task list
-        System.out.println(task.getTaskTypeID());
-        ArrayList<Task> existingTargetTasks = new ArrayList<Task>();
-        existingTargetTasks =this.getTargetTasks();
-        for(int i=0;i<getTargetTasks().size();++i){
-            if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
-                existingTargetTasks.add(i,task);
-            }
-        }
-        System.out.println("add çalışıyor"+existingTargetTasks.getFirst().getTaskTypeID());
-        this.setTargetTasks(existingTargetTasks);
-        if (getCurrentTaskNo() >= getMaxCapacity()) {
-            setFull(false);// Station is full
-        } else {
-            setFull(true); // Station still has capacity
-        }
+       if(!getTargetTasks().isEmpty()){
+           for(int i=0;i<=getTargetTasks().size();++i){
+               if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
+                   this.getTargetTasks().add(i,task);
+               }
+           }
+       }else{
+           this.getTargetTasks().add(task);
+       }
+
+       if (getCurrentTaskNo() >= getMaxCapacity()) {
+           setFull(false);// Station is full
+       } else {
+           setFull(true); // Station still has capacity
+       }
     }
 
     // pickTask method is to pick a task from targetTask for that stations, if exists.
@@ -63,12 +63,14 @@ public class EarlyJobOneStation extends Station {
         if(getCurrentTaskNo()!=0) {
             startTime = currentTime + getCurrentTasks().getFirst().getFinishTime() - currentTime;
         }
-        for (int i = 0; i < getTargetTasks().size(); i++) {
-           if(getTargetTasks().get(i).getJob().getDeadline()<task.getJob().getDeadline()) {
-               startTime += calculateOptimalDuration(this.getTargetTasks().get(i));
-           }else{
-               break;
-           }
+        if(!getTargetTasks().isEmpty()){
+            for (int i = 0; i < getTargetTasks().size(); i++) {
+                if(getTargetTasks().get(i).getJob().getDeadline()<task.getJob().getDeadline()) {
+                    startTime += calculateOptimalDuration(this.getTargetTasks().get(i));
+                }else{
+                    break;
+                }
+            }
         }
         startTime+=calculateDuration(task);
 

@@ -9,11 +9,7 @@ public class FifoOneStation extends Station {
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
     public void addTask(Task task){
         // Add the task to the station's task list
-        ArrayList<Task> existingTargetTasks = new ArrayList<Task>();
-        existingTargetTasks =this.getTargetTasks();
-        existingTargetTasks.add(task);
-        System.out.println("add çalışıyor"+existingTargetTasks.getFirst().getTaskTypeID());
-        this.setTargetTasks(existingTargetTasks);
+        this.getTargetTasks().add(task);
         if (getCurrentTaskNo() >= getMaxCapacity()) {
             setFull(false);// Station is full
         } else {
@@ -58,11 +54,11 @@ public class FifoOneStation extends Station {
         if(getCurrentTaskNo()!=0) {
             startTime = currentTime + getCurrentTasks().getFirst().getFinishTime() - currentTime;
         }
-
-        for (int i = 0; i < getTargetTasks().size(); i++) {
-            startTime += calculateOptimalDuration(this.getTargetTasks().get(i));
+        if(!getTargetTasks().isEmpty()) {
+            for (int i = 0; i < getTargetTasks().size(); i++) {
+                startTime += calculateOptimalDuration(this.getTargetTasks().get(i));
+            }
         }
-
         startTime+=calculateOptimalDuration(task);
 
         return startTime;

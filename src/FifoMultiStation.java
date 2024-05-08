@@ -10,11 +10,7 @@ public class FifoMultiStation extends Station{
     // addTask method is overrided because it adds tasks sorted. it allows us to expand the program with different station types
     public void addTask(Task task){
         // Add the task to the station's task list
-        ArrayList<Task> existingTargetTasks = new ArrayList<Task>();
-        existingTargetTasks =this.getTargetTasks();
-        existingTargetTasks.add(task);
-        this.setTargetTasks(existingTargetTasks);
-        System.out.println("add çalışıyor"+existingTargetTasks.getFirst().getTaskTypeID());
+       this.getTargetTasks().add(task);
         if (getCurrentTaskNo() >= getMaxCapacity()) {
             setFull(false);// Station is full
         } else {
@@ -59,7 +55,7 @@ public class FifoMultiStation extends Station{
 
         // to know how much time is left
         if(getCurrentTaskNo()!=0) {
-            for (int i = 0; i <= getCurrentTaskNo(); ++i) {
+            for (int i = 0; i < getCurrentTaskNo(); ++i) {
                 hasTimeToFinish[i] = getCurrentTasks().get(i).getFinishTime() - currentTime;
             }
         }
