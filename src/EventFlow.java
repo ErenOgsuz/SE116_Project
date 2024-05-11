@@ -37,8 +37,7 @@ public class EventFlow {
             System.out.println("Time is: "+currentTime+ " EventType: "+ nextEvent.getEventType());
 
             // if The nextEvent is triggering the job to start
-            switch (nextEvent.getEventType()){
-                case "JobStarting" :
+            if(nextEvent.getEventType().equals("JobStarting")) {
 
                 System.out.println(nextEvent.getJob().getJobId() + " has started!");
                 System.out.println("First task of "+nextEvent.getJob().getJobId()+"("+nextEvent.getJobType().getJobTypeID()+")"+" getting started");
@@ -52,7 +51,7 @@ public class EventFlow {
 
 
             // if The nextEvent is triggering the job to finish
-                case "JobFinished" :
+            }else if(nextEvent.getEventType().equals("JobFinished")) {
 
                 System.out.println(nextEvent.getJob().getJobId() + " has finished!");
 
@@ -63,7 +62,7 @@ public class EventFlow {
                 finishedJobs++;
 
             //if the nextEvent is trigerring the task to start
-                case "TaskStarting" :
+            }else if(nextEvent.getEventType().equals("TaskStarting")) {
 
                 System.out.println(nextEvent.getTask().getTaskTypeID() + " of " + nextEvent.getTask().getJob().getJobId() + " has started!");
 
@@ -71,7 +70,7 @@ public class EventFlow {
                 nextEvent.getTask().setStateExecuting();
 
              // if the nextEvent is trigerring the task to finish
-                case "TaskFinished" :
+            }else if(nextEvent.getEventType().equals("TaskFinished")){
 
                 System.out.println(nextEvent.getTask().getTaskTypeID() +"("+nextEvent.getTask().getTaskTypeID()+"-"+nextEvent.getTask().getJob().getJobId()+")"+ " has finished!");
 
@@ -112,6 +111,10 @@ public class EventFlow {
                     return Double.compare(e1.getDeadLine(), e2.getDeadLine());
                 }
             });
+
+            /*for(Event e : Main.events){
+                System.out.println(e.getEventType() + " " + e.getEventStartTime());
+            }*/
 
             // rearrange the nextEvent
             eventCount++;
