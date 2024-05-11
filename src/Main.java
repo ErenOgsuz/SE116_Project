@@ -45,29 +45,7 @@ public class Main {
         StationReader.readStations();
         JobFileReader.readJobsFromFile();
         EventFlow.eventFlow();
-        //EventFlow.eventFlow(); //Commented for now
-        JobType J1 = new JobType("J1", taskTypes);
-        JobType J2 = new JobType("J2", taskTypes);
-        JobType J3 = new JobType("J3", taskTypes);
-
-        jobs.add(new Job("Job1", J1, 17, 4));
-        jobs.add(new Job("Job1", J2, 5, 5));
-        jobs.add(new Job("Job1", J3, 10, 6));
-        // Calculate average job tardiness
-        double averageTardiness = ReportGenerator.calculateAverageJobTardiness(jobs);
-        System.out.println("Average Job Tardiness: " + averageTardiness);
-        jobs.get(0).setState(1);
-        jobs.get(0).setExecutingTask();
-        jobs.get(0).display();
-        //COMMENTED BELOW DUE TO ISSUES I cannot currently resolve..
-
-        // Calculate station utilization
-        //ReportGenerator.calculateStationUtilization(stations, totalSimulationTime);
-
-        // Print station utilization
-        //System.out.println("Station Utilization:");
-        //for (Station station : stations) {
-        //System.out.println(station.getStationID() + ": " + station.getUtilization());
+        ReportGenerator.calculateAverageJobTardinessAndUtilization();
 
         }
     }

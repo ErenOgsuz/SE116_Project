@@ -28,6 +28,13 @@ public class Task {
         this.state="Waiting..";
     }
 
+    public Task(String taskTypeID, double size,double plusMinus){
+        this.taskTypeID=taskTypeID;
+        this.size=size;
+        this.state="Waiting..";
+        this.plusMinus=plusMinus;
+    }
+
     public Task() {
     }
 
@@ -49,7 +56,6 @@ public class Task {
     }
     public double getDuration() {return duration;}
     public void setDuration(double duration) {this.duration = duration;}
-    public double getStartTime() {return startTime;}
     public void setStartTime(double startTime) {this.startTime = startTime;}
     public double getStarTime(){
         return  startTime;

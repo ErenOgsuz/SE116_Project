@@ -4,15 +4,13 @@ import java.util.Random;
 public abstract class Station {
     private String stationID;
     private int maxCapacity;
-    private String state; // it will change in TaskSchedular.
-    private boolean isFull;
     private int speed;
     private ArrayList<Task> tasksCanDo; // station can handle these tasks
     private ArrayList<Task> targetTasks; //station took these tasks but they wait for executing tasks
     private ArrayList<Task> currentTasks; // station execute these tasks
     private int currenttaskno = 0; // it is for executing tasks
-
-    //private boolean[] desks;// capacity of the station is the size.
+    private double sumDuration;
+    private static Random random = new Random();
 
     //for Stations which can handle multiple tasks
     public Station(String stationID, ArrayList<Task> tasksCanDo,int capacity){
@@ -38,14 +36,6 @@ public abstract class Station {
 
     public Station() {
     }
-
-    public boolean isFull() {
-        return isFull;
-    }
-
-    public void setFull(boolean full) {
-        isFull = full;
-    }
     public void setCurrentTaskNo(int currenttask) {
         this.currenttaskno = currenttask;
     }
@@ -53,8 +43,6 @@ public abstract class Station {
         return currenttaskno;
     }
     public String getStationID() {return stationID;}
-    public void setState(String state) {this.state = state;}
-    public String getState() {return state;}
     public int getSpeed() {return speed;}
     public ArrayList<Task> getTasks() {return tasksCanDo;}
     public ArrayList<Task> getTargetTasks() {return targetTasks;}
@@ -68,21 +56,30 @@ public abstract class Station {
     public void setCurrentTasks(ArrayList<Task> currentTasks) {
         this.currentTasks = currentTasks;
     }
+    public double getSumDuration() {
+        return sumDuration;
+    }
+
+    public void setSumDuration(double sumDuration) {
+        this.sumDuration = sumDuration;
+    }
 
     // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
     public abstract void addTask(Task task) ;
 
     public void displayState(){
-        if(targetTasks.isEmpty()){
-            System.out.println("Station is idle");
+        if(currentTasks.isEmpty()){
+            System.out.println(getStationID()+":Station is idle");
         }else{
             for (Task s : currentTasks){
-                System.out.println("Task " + s.getTaskTypeID() + " is running in " + this.stationID);
+                System.out.println("Task " + s.getTaskTypeID() +"("+s.getJobType().getJobTypeID()+"-"+s.getJob().getJobId()+ ") is running in " + this.stationID);
             }
-            for (Task s : targetTasks){
-                System.out.print("Task " + s.getTaskTypeID() + ", ");
+            if(!targetTasks.isEmpty()){
+                for (Task s : targetTasks){
+                    System.out.print("Task " + s.getTaskTypeID() + ", ");
+                }
+                System.out.print("are waiting in line in " + this.stationID +"\n");
             }
-            System.out.print("are waiting in line in " + this.stationID +"\n");
         }
     }
 
@@ -101,9 +98,16 @@ public abstract class Station {
 
     //calculateDuration is to select the fastest station.
     public double calculateDuration(Task task){
-        Random random=new Random();
-        double minSpeed= task.getSize()/getSpeed()-task.getSize()/getSpeed()*task.getPlusMinus();
-        double maxSpeed=  task.getSize()/getSpeed()+task.getSize()/getSpeed()*task.getPlusMinus();
+        Task currentTask=task;
+        for(Task task1: getTasks()){
+            if(task1.getTaskTypeID().equals(task.getTaskTypeID())){
+                currentTask=task1;
+                break;
+            }
+        }
+        double minSpeed= task.getSize()/getSpeed()-task.getSize()/getSpeed()*currentTask.getPlusMinus();
+        double maxSpeed=  task.getSize()/getSpeed()+task.getSize()/getSpeed()*currentTask.getPlusMinus();
+        System.out.println(minSpeed+" "+maxSpeed);
         return minSpeed+(maxSpeed-minSpeed)*random.nextDouble();
     }
     public double calculateOptimalDuration(Task task){

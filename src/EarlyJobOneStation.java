@@ -10,7 +10,7 @@ public class EarlyJobOneStation extends Station {
     public void addTask(Task task){
         // Add the task to the station's task list
        if(!getTargetTasks().isEmpty()){
-           for(int i=0;i<=getTargetTasks().size();++i){
+           for(int i=0;i<getTargetTasks().size();++i){
                if(getTargetTasks().get(i).getJob().getDeadline()>task.getJob().getDeadline()){
                    this.getTargetTasks().add(i,task);
                }
@@ -19,35 +19,27 @@ public class EarlyJobOneStation extends Station {
            this.getTargetTasks().add(task);
        }
 
-       if (getCurrentTaskNo() >= getMaxCapacity()) {
-           setFull(false);// Station is full
-       } else {
-           setFull(true); // Station still has capacity
-       }
     }
 
     // pickTask method is to pick a task from targetTask for that stations, if exists.
     // and it creates an event for scheduling.
     // ıt return boolean to say the station take another task.
     // ıt take double startTime, it comes from the ended task's finishTime
-    public boolean pickTask(double startTime){
+    public boolean pickTask(double currentTime){
         if (!getTargetTasks().isEmpty()){
             if(getCurrentTaskNo()<1) {
                 Task newTask = getTargetTasks().get(0);
                 getCurrentTasks().add(newTask);
                 setCurrentTaskNo(getCurrentTaskNo()+1);
                 getTargetTasks().remove(0);
-                /*if (!getTargetTasks().isEmpty()) {
-                    ArrayList<Task> newCurrentTasks = (ArrayList<Task>) getCurrentTasks().subList(1, getCurrentTasks().size()); //create a new arrayList for taking new task
-                    setCurrentTasks(newCurrentTasks);
-                }*/
                 // calculate duration to set the task for an event
                 newTask.setDuration(calculateDuration(newTask));
-                newTask.setStartTime(startTime);
-                newTask.setFinishTime(startTime+ newTask.getDuration());
+                newTask.setStartTime(currentTime);
+                newTask.setFinishTime(currentTime+ newTask.getDuration());
                 Main.events.add(new Event(newTask, newTask.getStarTime(),"TaskStarting"));
                 Main.events.add(new Event(newTask, newTask.getFinishTime(), "TaskFinished"));
                 newTask.setStateExecuting();
+                setSumDuration(getSumDuration()+newTask.getDuration());
                 //displayState();
                 return true;
             }else{
@@ -58,10 +50,10 @@ public class EarlyJobOneStation extends Station {
 
     // calculateStartTime is for find the optimal station
     public double calculateFinishTime(Task task,double currentTime) {
-        double startTime=0.0;
+        double startTime=currentTime;
 
         if(getCurrentTaskNo()!=0) {
-            startTime = currentTime + getCurrentTasks().get(0).getFinishTime() - currentTime;
+            startTime +=getCurrentTasks().get(0).getFinishTime() - currentTime;
         }
         if(!getTargetTasks().isEmpty()){
             for (int i = 0; i < getTargetTasks().size(); i++) {
@@ -72,7 +64,7 @@ public class EarlyJobOneStation extends Station {
                 }
             }
         }
-        startTime+=calculateDuration(task);
+        startTime+=calculateOptimalDuration(task);
 
         return startTime;
     }

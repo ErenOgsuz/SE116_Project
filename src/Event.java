@@ -4,24 +4,22 @@ public class Event {
     private String eventType;
     private Station station;
     private double deadLine;
-    private double eventStartTime;
     private Job job;
     private JobType jobType;
     private Task task;
 
-    public Event(Job job,JobType jobType,double jobStartTime, String eventType){
+    public Event(Job job,JobType jobType,double time, String eventType){
             this.eventType=eventType;
             this.job=job;
-            this.eventStartTime=jobStartTime;
+            this.deadLine=time;
             this.jobType = jobType;
     }
 
-    public Event(Task task, double eventStartTime, String eventType){
+    public Event(Task task, double time, String eventType){
         this.eventType=eventType; // "TaskStarting" or "TaskFinished"
-        this.deadLine=eventStartTime+ task.getDuration();
+        this.deadLine=time;
         this.task=task;
         this.station=task.getStation();
-        this.eventStartTime=eventStartTime;
     }
 
     public JobType getJobType() {
@@ -57,14 +55,6 @@ public class Event {
 
     public void setDeadLine(double deadLine) {
         this.deadLine = deadLine;
-    }
-
-    public double getEventStartTime() {
-        return eventStartTime;
-    }
-
-    public void setEventStartTime(double eventStartTime) {
-        this.eventStartTime = eventStartTime;
     }
 
     public String getEventType() {

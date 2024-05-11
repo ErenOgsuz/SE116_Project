@@ -33,7 +33,7 @@ public class JobType {
         return duration;
     }
 
-    public String getJobID() {
+    public String getJobTypeID() {
         return jobTypeID;
     }
 

@@ -29,8 +29,12 @@ public class JobFileReader {
                 String jobId = tokens[0];
                 boolean valid=false;
                 for (JobType jobTypes: Main.jobTypes) {
-                    if (jobTypes.getJobID().equals(tokens[1])) {
-                        jobType = new JobType(jobTypes.getJobID(),jobTypes.getTasks());
+                    if (jobTypes.getJobTypeID().equals(tokens[1])) {
+                        ArrayList<Task> tasks =new ArrayList<Task>();
+                        for(Task task1:jobTypes.getTasks() ){
+                            tasks.add(new Task(task1.getTaskTypeID(),task1.getSize(),task1.getPlusMinus()));
+                        }
+                        jobType = new JobType(jobTypes.getJobTypeID(),tasks);
                         valid =true;
                     }
                 }
@@ -67,13 +71,14 @@ public class JobFileReader {
 
                 // Step 8: Calculate the job's deadline
                 int deadline = startTime + duration;
-                System.out.println("Job ID: " + jobId + ", Deadline: " + deadline);
+                System.out.println("Job ID: " + jobId +" StartTime:"+startTime+ ", Deadline: " + deadline);
 
                 // Step 9: Add the Job object to the list
                 Main.jobs.add(job);
 
                 lineNumber++;
             }
+            System.out.println("......................");
         }catch (NumberFormatException e){
             System.err.printf("Semantic error on line %d: invalid input", lineNumber);
 

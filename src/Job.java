@@ -13,6 +13,7 @@ public class Job {
     private Task executingTask;
     private Task waitingToExecute;
     private double delayTime;
+    private double finishTime;
 
     public void display() {
         System.out.println("Job ID: " + getJobId() + "\nJop Type: " + getJobType() + "\nStarting time: " + getStartTime()
@@ -78,6 +79,13 @@ public class Job {
     public String getState(){
         return state;
     }
+    public double getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(double finishTime) {
+        this.finishTime = finishTime;
+    }
 
     public void setExecutingTask(){
         for(Task task:jobType.getTasks()){
@@ -118,7 +126,7 @@ public class Job {
 
     public double getDelayTime(){
         ArrayList<Task> jobTasks = jobType.getTasks();
-        delayTime = jobTasks.get(jobTasks.size() - 1).getFinishTime()-this.deadline;
+        delayTime = this.getFinishTime()-this.deadline;
         return delayTime;
     }
     public void isJobExecuting(ArrayList<Job> jobs) {

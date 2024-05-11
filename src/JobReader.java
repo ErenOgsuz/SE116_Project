@@ -96,7 +96,7 @@ public class JobReader {
                                 if(isThereTask){ // If there is a task add it to Job
                                     boolean jobExist = false;
                                     for(JobType job : Main.jobTypes){ // Is this jobID given before
-                                        if(job.getJobID().equals(parts[i])){
+                                        if(job.getJobTypeID().equals(parts[i])){
                                             jobExist = true;
                                             break;
                                         }
@@ -138,7 +138,7 @@ public class JobReader {
             }
 
             for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
-                System.out.print(job.getJobID() + " ");
+                System.out.print(job.getJobTypeID() + " ");
                 for(Task task : job.getTasks()){
                     System.out.print(task.getTaskTypeID() + " ");
                 }
