@@ -18,6 +18,16 @@ public class StationReader {
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
             boolean isStation = false;
+
+            do {
+                line = br.readLine();
+                if (!line.contains("STATIONS")) {
+                    lineCount++;
+                } else {
+                    break;
+                }
+            } while (true);
+
             while (true) {
                 line = br.readLine();
 
@@ -26,28 +36,27 @@ public class StationReader {
                     break;
                 }
 
-                if (line.contains("STATIONS")){
+                String[] parts = line.split(" ");
+                for (int i = 0; i < parts.length; i++) {
+                    parts[i] = parts[i].trim();
+                    allLine = allLine.concat(parts[i]);
+                }
+
+                if (line.contains("STATIONS")) {
                     allLine = allLine.concat(line);
                     lineCount++;
-                    isStation = true;
                     continue;
                 }
 
-                if (line.contains("S") && isStation) {
+                if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) {
                     isThereStation = true;
-                    String[] parts =line.split(" ");
 
-                    for(String part: parts){
-                        part=part.trim();
-                        allLine= allLine.concat(part);
-                    }
-
-                    for (int i = 0; i< parts.length; i++){
+                    for (int i = 0; i < parts.length; i++) {
                         parts[i] = parts[i].trim();
-                        if(parts[i].contains(")")){
-                            parts[i] = parts[i].substring(0,parts[i].length()-1); //To distinguish station from ')'
+                        if (parts[i].contains(")")) {
+                            parts[i] = parts[i].substring(0, parts[i].length() - 1); //To distinguish station from ')'
                         }
-                        if(parts[i].contains("(")){
+                        if (parts[i].contains("(")) {
                             parts[i] = parts[i].substring(1); //To distinguish station from '('
                         }
 
@@ -76,105 +85,101 @@ public class StationReader {
                         }
                     }
 
-                    for (int i = 0; i < parts.length;i++) {
-                        if (parts[i].contains("S")) {
-                            if (parts[i].matches("^[A-Za-z].*")) {
-                                for (int j = i +4; j < parts.length; j++){
-                                    if (parts[j].matches("^[a-zA-Z][a-zA-Z0-9_]*$")){
-                                        isThereTask = true;
-                                        boolean taskExist = false;
-                                        Task taskToAdd = new Task();
-                                        for (Task task : Main.taskTypes) { //Main -> Main class
-                                            if (task.getTaskTypeID().equals(parts[j])) {
-                                                taskExist = true;
-                                                if (j < parts.length - 1 && !parts[j + 1].contains("T")) {
-                                                    taskToAdd = new Task(task.getTaskTypeID(),task.getSize());
-                                                    if(Double.parseDouble(parts[j+1]) < 0){
-                                                        invalidSpeedSize(lineCount);
-                                                    }else{
-                                                        taskToAdd.setSpeed(Double.parseDouble(parts[j+1]));
-                                                        if (j+1 < parts.length - 1 && !parts[j + 2].contains("T")) {
-                                                            taskToAdd = new Task(task.getTaskTypeID(),task.getSize());
-                                                            if(Double.parseDouble(parts[j+2]) < 0 || Double.parseDouble(parts[j+2])>1){
-                                                                invalidPlusMinus(lineCount);
-                                                            }else{
-                                                                taskToAdd.setPlusMinus(Double.parseDouble(parts[j+2]));
-                                                            }
-                                                        }
+                    if (parts[0].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+                        for (int j = 4; j < parts.length; j++) {
+                            if (parts[j].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+                                isThereTask = true;
+                                boolean taskExist = false;
+                                Task taskToAdd = new Task();
+                                for (Task task : Main.taskTypes) { //Main -> Main class
+                                    if (task.getTaskTypeID().equals(parts[j])) {
+                                        taskExist = true;
+                                        if (j < parts.length - 1 && !parts[j + 1].contains("T")) {
+                                            taskToAdd = new Task(task.getTaskTypeID(), task.getSize());
+                                            if (Double.parseDouble(parts[j + 1]) < 0) {
+                                                invalidSpeedSize(lineCount);
+                                            } else {
+                                                taskToAdd.setSpeed(Double.parseDouble(parts[j + 1]));
+                                                if (j + 1 < parts.length - 1 && !parts[j + 2].contains("T")) {
+                                                    taskToAdd = new Task(task.getTaskTypeID(), task.getSize());
+                                                    if (Double.parseDouble(parts[j + 2]) < 0 || Double.parseDouble(parts[j + 2]) > 1) {
+                                                        invalidPlusMinus(lineCount);
+                                                    } else {
+                                                        taskToAdd.setPlusMinus(Double.parseDouble(parts[j + 2]));
                                                     }
                                                 }
-                                                else {
-                                                    taskToAdd = new Task(task.getTaskTypeID(),task.getSize());
-                                                    System.err.println(taskToAdd.getTaskTypeID() + "'s speed is not declared. Setting speed to 1");
-                                                }
                                             }
-                                        }
-                                        if(taskExist){
-                                            stationTasks.add(taskToAdd);
-                                        }
-                                        else {
-                                            nonDeclaredTask(lineCount,parts[j]);
-                                        }
-                                    }else{
-
-                                    }                                }
-                                if(isThereTask){
-                                    boolean stationExist = false;
-                                    for(Station station : Main.stationsTypes){
-                                        if (station.getStationID().equals(parts[i])) {
-                                            stationExist = true;
+                                        } else {
+                                            taskToAdd = new Task(task.getTaskTypeID(), task.getSize());
+                                            System.err.println(taskToAdd.getTaskTypeID() + "'s speed is not declared. Setting speed to 1");
                                         }
                                     }
-                                    if(!stationExist){
-                                        if(multiflag && fifoflag){
-                                            Main.stationsTypes.add(new FifoMultiStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
-                                            stationTasks.clear();
-                                            stationCount++;
-                                        } else if(multiflag && !fifoflag){
-                                            Main.stationsTypes.add(new EarlyJobMultiStation(parts[i], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[i+1])));
-                                            stationTasks.clear();
-                                            stationCount++;
-                                        } else if(!multiflag && fifoflag){
-                                            Main.stationsTypes.add(new FifoOneStation(parts[i], new ArrayList<Task>(stationTasks)));
-                                            stationTasks.clear();
-                                            stationCount++;
-                                        } else if(!multiflag && !fifoflag){
-                                            Main.stationsTypes.add(new EarlyJobOneStation(parts[i], new ArrayList<Task>(stationTasks)));
-                                            stationTasks.clear();
-                                            stationCount++;
-                                        }
-                                    }else {
-                                        alreadyDeclaredStation(lineCount,parts[i]);
-                                    }
-                                }else{
-                                    noTask(lineCount);
                                 }
-                                isThereTask = false;
-                            }
-                            else {
-                                System.out.println("Call");
+                                if (taskExist) {
+                                    stationTasks.add(taskToAdd);
+                                } else {
+                                    nonDeclaredTask(lineCount, parts[j]);
+                                }
+                            } else {
 
-                                stationIDisWrong(lineCount);
                             }
                         }
+                        if (isThereTask) {
+                            boolean stationExist = false;
+                            for (Station station : Main.stationsTypes) {
+                                if (station.getStationID().equals(parts[0])) {
+                                    stationExist = true;
+                                }
+                            }
+                            if (!stationExist) {
+                                if (multiflag && fifoflag) {
+                                    Main.stationsTypes.add(new FifoMultiStation(parts[0], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[1])));
+                                    stationTasks.clear();
+                                    stationCount++;
+                                } else if (multiflag && !fifoflag) {
+                                    Main.stationsTypes.add(new EarlyJobMultiStation(parts[0], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[1])));
+                                    stationTasks.clear();
+                                    stationCount++;
+                                } else if (!multiflag && fifoflag) {
+                                    Main.stationsTypes.add(new FifoOneStation(parts[0], new ArrayList<Task>(stationTasks)));
+                                    stationTasks.clear();
+                                    stationCount++;
+                                } else if (!multiflag && !fifoflag) {
+                                    Main.stationsTypes.add(new EarlyJobOneStation(parts[0], new ArrayList<Task>(stationTasks)));
+                                    stationTasks.clear();
+                                    stationCount++;
+                                }
+                            } else {
+                                alreadyDeclaredStation(lineCount, parts[0]);
+                            }
+                        } else {
+                            noTask(lineCount);
+                        }
+                        isThereTask = false;
+                    } else {
+                        System.out.println("Call");
+
+                        stationIDisWrong(lineCount);
                     }
+
+
                 }
                 lineCount++;
 
             }
 
-            if(!allLine.startsWith("(")){
+            if (!allLine.startsWith("(")) {
                 System.out.println(allLine);
                 controlBracket("(");
             }
-            if(!allLine.endsWith("))")){
+            if (!allLine.endsWith("))")) {
                 controlBracket(")");
             }
 
             for (Station station : Main.stationsTypes) {
                 System.out.print(station.getStationID() + " ");
-                for(Task task : station.getTasks()){
-                    System.out.print(task.getTaskTypeID() + " "+task.getPlusMinus()+" ");
+                for (Task task : station.getTasks()) {
+                    System.out.print(task.getTaskTypeID() + " " + task.getPlusMinus() + " ");
                 }
                 System.out.println();
             }
@@ -189,29 +194,36 @@ public class StationReader {
         }
 
     }
-    public static void controlBracket(String bracketType) throws  Exception {
+
+    public static void controlBracket(String bracketType) throws Exception {
         if (bracketType.equals("(")) {
             throw new Exception("There is no '(' at correct place. ");
         } else if (bracketType.equals(")")) {
             throw new Exception("There is no ')' at correct place. ");
         }
     }
+
     public static void alreadyDeclaredStation(int lineCount, String stationID) throws Exception {
         throw new Exception("Line " + lineCount + ": " + stationID + ": already declared.");
     }
-    public static void invalidSpeedSize(int lineCount) throws Exception{
+
+    public static void invalidSpeedSize(int lineCount) throws Exception {
         throw new Exception("Line " + lineCount + ": There is an invalid default size.");
     }
-    public static void nonDeclaredTask(int lineCount, String taskID) throws Exception{
+
+    public static void nonDeclaredTask(int lineCount, String taskID) throws Exception {
         throw new Exception("Line " + lineCount + ": " + taskID + " is not one of the declared task types.");
     }
-    public static void noTask(int lineCount) throws Exception{
+
+    public static void noTask(int lineCount) throws Exception {
         throw new Exception("Line " + lineCount + ": There is no task given for job.");
     }
-    public static void stationIDisWrong(int lineCount) throws Exception{
+
+    public static void stationIDisWrong(int lineCount) throws Exception {
         throw new Exception("Line " + lineCount + ": StationID is written wrong, write \"S\" first then give number");
     }
-    public static void invalidPlusMinus(int lineCount) throws Exception{
+
+    public static void invalidPlusMinus(int lineCount) throws Exception {
         throw new Exception("Line " + lineCount + ": the PlusMinus rate is invalid.");
     }
 }
