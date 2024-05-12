@@ -19,14 +19,16 @@ public class JobReader {
 
             while (true) { // Read line by line
                 line = br.readLine();
+                String[] parts =line.split(" ");
 
                 if(line.contains("JOBTYPES")){
-                    allLine = allLine.concat(line);
-                    lineCount++;
-                    continue;
-                } else if (line.contains("J")) { // If line has J in it, it will start to create a Job object
+                    if(parts.length == 1){
+                        allLine = allLine.concat(line);
+                        lineCount++;
+                        continue;
+                    }
+                }else if (line.contains("J")) { // If line has J in it, it will start to create a Job object
                     isThereJob = true;
-                    String[] parts =line.split(" ");
 
                     for(String part: parts){
                         part=part.trim();

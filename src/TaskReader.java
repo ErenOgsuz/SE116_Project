@@ -17,7 +17,7 @@ public class TaskReader {
                 line = br.readLine();
                 lineCount++;
 
-                if (line.contains("J")) {
+                if (line.contains("JOBTYPES")) {
                     break;
                 }
 
@@ -30,26 +30,23 @@ public class TaskReader {
                 allLine = allLine.concat(line);
 
                 for(int i=1; i< parts.length;i++) {
-                    if (!parts[i].contains("J")) {
+                    if (!parts[i].contains("JOBTYPES")) {
                         if(!parts[i].isEmpty()) {
                             if (!parts[i].contains("TASKTYPES")) {
-                                if (parts[i].contains("T")) {
-                                    if (parts[i].matches("^T[a-zA-Z0-9_]+$")) {
-                                        boolean exist = false;
-                                        for (int k = 0; k < Main.taskTypes.size(); ++k) {
-                                            if (Main.taskTypes.get(k).getTaskTypeID().equals(parts[i])) {
-                                                exist = true;
-                                            }
+                                if (parts[i].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+                                    boolean exist = false;
+                                    for (int k = 0; k < Main.taskTypes.size(); ++k) {
+                                        if (Main.taskTypes.get(k).getTaskTypeID().equals(parts[i])) {
+                                            exist = true;
                                         }
-                                        if (!exist) {
-                                            Main.taskTypes.add(new Task(parts[i]));
-                                            taskCount++;
-                                        } else {
-                                            alreadyDeclaredTaskType(lineCount, parts[i]);
-                                        }
-                                    } else {
-                                        incorrectTaskType(lineCount);
                                     }
+                                    if (!exist) {
+                                        Main.taskTypes.add(new Task(parts[i]));
+                                        taskCount++;
+                                    } else {
+                                        alreadyDeclaredTaskType(lineCount, parts[i]);
+                                    }
+
                                 } else if (parts[i].matches("\\d+(\\.\\d+)?")) {
                                     if (taskCount > 0) {
                                         if (Main.taskTypes.get(taskCount - 1).getSize()==0.0) {
