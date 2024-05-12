@@ -78,7 +78,7 @@ public class JobFileReader {
 
                 lineNumber++;
             }
-            System.out.println("......................");
+            System.out.println(".................................................\n");
         }catch (NumberFormatException e){
             System.err.printf("Semantic error on line %d: invalid input", lineNumber);
 

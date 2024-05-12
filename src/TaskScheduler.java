@@ -16,7 +16,7 @@ public class TaskScheduler {
     public static Station findSuitableStation(Task task,double currentTime) {
         List<Station> suitableStations = new ArrayList<>();
 
-        System.out.println("..... Station found......");
+        System.out.println("\nSearching Station To Execute:");
 
         for (Station station : Main.stationsTypes) {
             if (station.canExecuteTaskType(task.getTaskTypeID())) {
@@ -36,7 +36,7 @@ public class TaskScheduler {
                 correctStation=station;
             }
         }
-        System.out.println("The "+task.getTaskTypeID()+" of "+task.getJob().getJobId()+" ("+task.getJob().getJobType().getJobTypeID()+") will probably continue at "+finishTime+".");
+        System.out.println("The "+task.getTaskTypeID()+" of "+task.getJob().getJobId()+" ("+task.getJob().getJobType().getJobTypeID()+") will approximately finish at "+finishTime+".");
         task.setStation(correctStation); // Here, we set the task's station
         correctStation.addTask(task); // Add task to stations targetTasks
 

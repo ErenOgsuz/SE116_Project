@@ -18,6 +18,7 @@ public class ReportGenerator {
         }
 
         // Print the tardy jobs
+        System.out.println("...................Tardy Jobs.....................");
         if (tardyJobCount > 0) {
             System.out.println("Tardy Jobs:");
             for (Job job : tardyJobs) {
@@ -35,18 +36,20 @@ public class ReportGenerator {
         } else {
             System.out.println("Average Job Tardiness: 0");
         }
+        System.out.println("..................................................\n");
 
-        System.out.println("..............................");
+        System.out.println("...............Station Utilization................");
         for (Station station : Main.stationsTypes) {
-            System.out.println(station.getSumDuration() );
-            System.out.println(Main.events.getLast().getDeadLine());
+            //System.out.println(station.getSumDuration() );
+            //System.out.println(Main.events.getLast().getDeadLine());
             double utilizationPercentage = (station.getSumDuration() / Main.events.getLast().getDeadLine()*100);
             double idlenessPercentage = 100 - utilizationPercentage;
             System.out.println("Station ID: " + station.getStationID());
             System.out.println("Utilization Percentage: " + utilizationPercentage + "%");
             System.out.println("Idleness Percentage: " + idlenessPercentage + "%");
-
+            System.out.println();
         }
+        System.out.println("..................................................");
     }
 
 }

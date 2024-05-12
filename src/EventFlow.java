@@ -30,6 +30,7 @@ public class EventFlow {
         int eventCount=0;
 
         do{
+            System.out.println("..................Event Block....................");
             nextEvent=Main.events.get(eventCount);
 
             currentTime=nextEvent.getDeadLine();
@@ -126,12 +127,12 @@ public class EventFlow {
             }
 
 
-            System.out.println(".......Station states updated.......");
+            System.out.println("\nStates of Stations:");
             for(Station station1:Main.stationsTypes){
                 station1.displayState();
             }
 
-            System.out.println("..........................");
+            System.out.println("..................................................\n");
 
         }while(allJobsNotFinished && eventCount < Main.events.size());
     }

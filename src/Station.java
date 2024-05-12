@@ -107,7 +107,7 @@ public abstract class Station {
         }
         double minSpeed= task.getSize()/getSpeed()-task.getSize()/getSpeed()*currentTask.getPlusMinus();
         double maxSpeed=  task.getSize()/getSpeed()+task.getSize()/getSpeed()*currentTask.getPlusMinus();
-        System.out.println(minSpeed+" "+maxSpeed);
+        System.out.println("Min Speed is: "+minSpeed+", Max Speed is: "+maxSpeed);
         return minSpeed+(maxSpeed-minSpeed)*random.nextDouble();
     }
     public double calculateOptimalDuration(Task task){
