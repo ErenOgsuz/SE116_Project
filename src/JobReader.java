@@ -17,12 +17,26 @@ public class JobReader {
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath))) {
             String line = "";
 
+            do{
+                line= br.readLine();
+                if(!line.contains("JOBTYPES")){
+                    lineCount++;
+                }else{
+                    break;
+                }
+            }while(true);
+
             while (true) { // Read line by line
                 line = br.readLine();
-                String[] parts = line.split(" ");
 
                 if (line.contains("STATIONS")) {
                     break;
+                }
+
+                String[] parts = line.split(" ");
+                for (int i= 0; i<parts.length; i++){
+                    parts[i] = parts[i].trim();
+                    allLine = allLine.concat(parts[i]);
                 }
 
                 if (line.contains("JOBTYPES")) {
@@ -31,13 +45,8 @@ public class JobReader {
                         lineCount++;
                         continue;
                     }
-                } else if (line.contains("J")) { // If line has J in it, it will start to create a Job object
+                } else if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) { // If line has J in it, it will start to create a Job object
                     isThereJob = true;
-
-                    for (String part : parts) {
-                        part = part.trim();
-                        allLine = allLine.concat(part);
-                    }
 
                     for (int i = 0; i < parts.length; i++) { // Clean the Strings from empty space and parentheses
                         parts[i] = parts[i].trim();
