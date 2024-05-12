@@ -78,9 +78,9 @@ public class StationReader {
 
                     for (int i = 0; i < parts.length;i++) {
                         if (parts[i].contains("S")) {
-                            if (parts[i].charAt(0) == 'S') {
-                                for (int j = 0; j < parts.length; j++){
-                                    if (parts[j].contains("T")){
+                            if (parts[i].matches("^[A-Za-z].*")) {
+                                for (int j = i +4; j < parts.length; j++){
+                                    if (parts[j].matches("^[a-zA-Z][a-zA-Z0-9_]*$")){
                                         isThereTask = true;
                                         boolean taskExist = false;
                                         Task taskToAdd = new Task();
