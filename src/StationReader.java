@@ -9,15 +9,13 @@ public class StationReader {
         String workFlowFilePath = "WorkFlow.txt";
 
         int lineCount = 1; //The line that has been read.
-        int stationCount = 0;
-        boolean isThereStation = false;
         boolean isThereTask = false;
         boolean multiflag = false;
         boolean fifoflag = false;
         String allLine = "";
+
         try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath));) {
             String line = "";
-            boolean isStation = false;
 
             do {
                 line = br.readLine();
@@ -49,7 +47,6 @@ public class StationReader {
                 }
 
                 if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) {
-                    isThereStation = true;
 
                     for (int i = 0; i < parts.length; i++) {
                         parts[i] = parts[i].trim();
@@ -120,8 +117,6 @@ public class StationReader {
                                 } else {
                                     nonDeclaredTask(lineCount, parts[j]);
                                 }
-                            } else {
-
                             }
                         }
                         if (isThereTask) {
@@ -135,19 +130,15 @@ public class StationReader {
                                 if (multiflag && fifoflag) {
                                     Main.stationsTypes.add(new FifoMultiStation(parts[0], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[1])));
                                     stationTasks.clear();
-                                    stationCount++;
                                 } else if (multiflag && !fifoflag) {
                                     Main.stationsTypes.add(new EarlyJobMultiStation(parts[0], new ArrayList<Task>(stationTasks), Integer.parseInt(parts[1])));
                                     stationTasks.clear();
-                                    stationCount++;
                                 } else if (!multiflag && fifoflag) {
                                     Main.stationsTypes.add(new FifoOneStation(parts[0], new ArrayList<Task>(stationTasks)));
                                     stationTasks.clear();
-                                    stationCount++;
                                 } else if (!multiflag && !fifoflag) {
                                     Main.stationsTypes.add(new EarlyJobOneStation(parts[0], new ArrayList<Task>(stationTasks)));
                                     stationTasks.clear();
-                                    stationCount++;
                                 }
                             } else {
                                 alreadyDeclaredStation(lineCount, parts[0]);
@@ -158,10 +149,8 @@ public class StationReader {
                         isThereTask = false;
                     } else {
                         System.out.println("Call");
-
                         stationIDisWrong(lineCount);
                     }
-
 
                 }
                 lineCount++;

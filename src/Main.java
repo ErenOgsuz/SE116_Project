@@ -3,6 +3,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     protected static ArrayList<Task> taskTypes = new ArrayList<Task>();
@@ -12,32 +13,44 @@ public class Main {
     protected static ArrayList<Event> events = new ArrayList<Event>();
 
     public static void main(String[] args) {
-        String jobFilePath = "JobFile.txt"; // The path of Job file
-        String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
+        Scanner sc = new Scanner(System.in);
 
-        Path jobFilePathObject = Paths.get(jobFilePath);
-        Path workFlowFilePathObject = Paths.get(workFlowFilePath);
+        while(true){
+            System.out.print("Enter job file name: ");
+            String jobFilePath = sc.next(); // The path of Job file
 
-        if (Files.exists(jobFilePathObject)) {
-            System.out.println("The job file exist.");
-            if (Files.isReadable(jobFilePathObject)) {
-                System.out.println("The job file accessible.");
+            Path jobFilePathObject = Paths.get(jobFilePath);
+
+            if (Files.exists(jobFilePathObject)) {
+                System.out.println("The job file exist.");
+                if (Files.isReadable(jobFilePathObject)) {
+                    System.out.println("The job file accessible.");
+                    break;
+                } else {
+                    System.out.println("The job file does not accessible.");
+                }
             } else {
-                System.out.println("The job file does not accessible.");
+                System.out.println("The job file does not exist.");
             }
-        } else {
-            System.out.println("The job file does not exist.");
         }
 
-        if (Files.exists(workFlowFilePathObject)) {
-            System.out.println("The WorkFlow file exist.");
-            if (Files.isReadable(workFlowFilePathObject)) {
-                System.out.println("The WorkFlow file accessible.");
+        while(true){
+            System.out.print("Enter workflow file name: ");
+            String workFlowFilePath = sc.next(); // The path of work flow file
+
+            Path workFlowFilePathObject = Paths.get(workFlowFilePath);
+
+            if (Files.exists(workFlowFilePathObject)) {
+                System.out.println("The WorkFlow file exist.");
+                if (Files.isReadable(workFlowFilePathObject)) {
+                    System.out.println("The WorkFlow file accessible.");
+                    break;
+                } else {
+                    System.out.println("The WorkFlow file does not accessible.");
+                }
             } else {
-                System.out.println("The WorkFlow file does not accessible.");
+                System.out.println("The WorkFlow file does not exist.");
             }
-        } else {
-            System.out.println("The WorkFlow file does not exist.");
         }
 
         TaskReader.readTasks();
@@ -47,5 +60,5 @@ public class Main {
         EventFlow.eventFlow();
         ReportGenerator.calculateAverageJobTardinessAndUtilization();
 
-        }
     }
+}
