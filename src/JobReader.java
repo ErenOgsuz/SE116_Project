@@ -3,11 +3,11 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class JobReader {
-    public static void readJobs() {
+    public static void readJobs(String filePath) throws Exception {
         ArrayList<JobType> jobs = new ArrayList<JobType>();
         ArrayList<Task> jobTasks = new ArrayList<Task>();
 
-        String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
+        String workFlowFilePath = filePath; // The path of work flow file
 
         int lineCount = 1;  // indicates the line read.
         String allLine = "";
@@ -153,6 +153,7 @@ public class JobReader {
 
         } catch (Exception exception) {
             exception.printStackTrace();
+            throw new Exception();
         }
     }
 

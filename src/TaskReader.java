@@ -2,9 +2,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 public class TaskReader {
-    public static void readTasks(){
+    public static void readTasks(String filePath) throws Exception{
 
-        String workFlowFilePath = "WorkFlow.txt"; // The path of work flow file
+        String workFlowFilePath = filePath; // The path of work flow file
 
         int lineCount = 0;  // indicates the line read.
         int taskCount = 0;
@@ -91,6 +91,7 @@ public class TaskReader {
             }
         } catch (Exception exception) {
             exception.printStackTrace();
+            throw new Exception();
         }
 
     }

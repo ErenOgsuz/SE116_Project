@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 public class JobFileReader {
-    public static void readJobsFromFile() {
-        String jobFilePath = "JobFile.txt"; // The path of Job file
+    public static void readJobsFromFile(String filepath) throws Exception{
+        String jobFilePath = filepath; // The path of Job file
         Set<String> jobIds = new HashSet<>();
         int lineNumber = 1;
 
@@ -71,7 +71,8 @@ public class JobFileReader {
 
                 // Step 8: Calculate the job's deadline
                 int deadline = startTime + duration;
-                System.out.println("Job ID: " + jobId +" StartTime:"+startTime+ ", Deadline: " + deadline);
+                job.setDeadline(deadline);
+                System.out.println("Job ID: " + jobId + " JobType ID:" + jobType + " StartTime:"+startTime+ ", Deadline: " + deadline);
 
                 // Step 9: Add the Job object to the list
                 Main.jobs.add(job);
@@ -81,9 +82,11 @@ public class JobFileReader {
             System.out.println(".................................................\n");
         }catch (NumberFormatException e){
             System.err.printf("Semantic error on line %d: invalid input", lineNumber);
+            throw new Exception();
 
         } catch (Exception e) {
             System.err.println("Error reading file: " + e.getMessage());
+            throw new Exception();
             // Handle the error appropriately
         }
     }

@@ -56,6 +56,10 @@ public class Job {
         return deadline;
     }
 
+    public void setDeadline(double deadline) {
+        this.deadline = deadline;
+    }
+
     public void setState(double time) {
         if(time < getStartTime()){
             this.state = "Waiting..";

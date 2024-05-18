@@ -120,12 +120,10 @@ public class EventFlow {
             // rearrange the nextEvent
             eventCount++;
 
-
             // if the finishedJobs equal to Main.jobs.size(), theAllJobsFinished will false.
             if(finishedJobs== Main.jobs.size()){
                 allJobsNotFinished=false;
             }
-
 
             System.out.println("\nStates of Stations:");
             for(Station station1:Main.stationsTypes){

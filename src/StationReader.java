@@ -3,10 +3,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class StationReader {
-    public static void readStations() {
+    public static void readStations(String filePath) throws Exception{
         ArrayList<Task> stationTasks = new ArrayList<Task>();
 
-        String workFlowFilePath = "WorkFlow.txt";
+        String workFlowFilePath = filePath;
 
         int lineCount = 1; //The line that has been read.
         boolean isThereTask = false;
@@ -180,6 +180,7 @@ public class StationReader {
             }*/
         } catch (Exception exception) {
             exception.printStackTrace();
+            throw new Exception();
         }
 
     }

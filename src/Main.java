@@ -14,51 +14,80 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        String jobFilePath;
+        String workFlowFilePath;
 
-        while(true){
-            System.out.print("Enter job file name: ");
-            String jobFilePath = sc.next(); // The path of Job file
+        do {
 
-            Path jobFilePathObject = Paths.get(jobFilePath);
+            while (true) {
+                System.out.print("Enter job file name: ");
+                jobFilePath = sc.next(); // The path of Job file
 
-            if (Files.exists(jobFilePathObject)) {
-                System.out.println("The job file exist.");
-                if (Files.isReadable(jobFilePathObject)) {
-                    System.out.println("The job file accessible.");
-                    break;
+                Path jobFilePathObject = Paths.get(jobFilePath);
+
+                if (Files.exists(jobFilePathObject)) {
+                    System.out.println("The job file exist.");
+                    if (Files.isReadable(jobFilePathObject)) {
+                        System.out.println("The job file accessible.");
+                        break;
+                    } else {
+                        System.out.println("The job file does not accessible.");
+                    }
                 } else {
-                    System.out.println("The job file does not accessible.");
+                    System.out.println("The job file does not exist.");
                 }
-            } else {
-                System.out.println("The job file does not exist.");
             }
-        }
 
-        while(true){
-            System.out.print("Enter workflow file name: ");
-            String workFlowFilePath = sc.next(); // The path of work flow file
+            while (true) {
+                System.out.print("Enter workflow file name: ");
+                workFlowFilePath = sc.next(); // The path of work flow file
 
-            Path workFlowFilePathObject = Paths.get(workFlowFilePath);
+                Path workFlowFilePathObject = Paths.get(workFlowFilePath);
 
-            if (Files.exists(workFlowFilePathObject)) {
-                System.out.println("The WorkFlow file exist.");
-                if (Files.isReadable(workFlowFilePathObject)) {
-                    System.out.println("The WorkFlow file accessible.");
-                    break;
+                if (Files.exists(workFlowFilePathObject)) {
+                    System.out.println("The WorkFlow file exist.");
+                    if (Files.isReadable(workFlowFilePathObject)) {
+                        System.out.println("The WorkFlow file accessible.");
+                        break;
+                    } else {
+                        System.out.println("The WorkFlow file does not accessible.");
+                    }
                 } else {
-                    System.out.println("The WorkFlow file does not accessible.");
+                    System.out.println("The WorkFlow file does not exist.");
                 }
-            } else {
-                System.out.println("The WorkFlow file does not exist.");
             }
-        }
 
-        TaskReader.readTasks();
-        JobReader.readJobs();
-        StationReader.readStations();
-        JobFileReader.readJobsFromFile();
-        EventFlow.eventFlow();
-        ReportGenerator.calculateAverageJobTardinessAndUtilization();
+            try {
+                TaskReader.readTasks(workFlowFilePath);
+                JobReader.readJobs(workFlowFilePath);
+                System.out.println("Çalıstım");
+                StationReader.readStations(workFlowFilePath);
+                System.out.println("Çalıstım2");
+                JobFileReader.readJobsFromFile(jobFilePath);
+                System.out.println("Çalıstım3");
+                EventFlow.eventFlow();
+                ReportGenerator.calculateAverageJobTardinessAndUtilization();
+
+            }catch(Exception e){
+                System.out.println("An Error Occured");
+                taskTypes.clear();
+                jobTypes.clear();
+                stationsTypes.clear();
+                jobs.clear();
+                events.clear();
+            }finally {
+                System.out.println("Please write \"exit\" if you want to close program");
+                System.out.println("If you do not want to exit write anything else");
+            }
+
+            String resume = sc.next();
+            if(resume.equals("exit")){
+                break;
+            }else{
+                continue;
+            }
+
+        }while(true);
 
     }
 }
