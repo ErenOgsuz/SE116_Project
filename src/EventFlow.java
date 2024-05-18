@@ -55,15 +55,16 @@ public class EventFlow {
             }else if(nextEvent.getEventType().equals("JobFinished")) {
 
                 System.out.println(nextEvent.getJob().getJobId() + " has finished!");
-                if(nextEvent.getJob().getDelayTime() > 0) {
-                    System.out.println("Job ID: " + nextEvent.getJob().getJobId() + ", Tardiness: " + (nextEvent.getJob().getDelayTime()));
-                }else{
-                    System.out.println("Job ID: " + nextEvent.getJob().getJobId() + ", Tardiness: This job has no tardiness");
-                }
 
                 // set the state of job
                 nextEvent.getJob().setState(currentTime);
                 nextEvent.getJob().setFinishTime(currentTime);
+
+                if(nextEvent.getJob().getDelayTime() > 0) {
+                    System.out.println("Job ID: " + nextEvent.getJob().getJobId() + ", Tardiness: " + (nextEvent.getJob().getDelayTime()) + " time late");
+                }else{
+                    System.out.println("Job ID: " + nextEvent.getJob().getJobId() + ", Tardiness: " + (-1 * (nextEvent.getJob().getDelayTime())) + " time early");
+                }
 
                 finishedJobs++;
 
