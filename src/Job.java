@@ -133,6 +133,7 @@ public class Job {
         delayTime = this.getFinishTime()-this.deadline;
         return delayTime;
     }
+
     public void isJobExecuting(ArrayList<Job> jobs) {
         for (Job j: jobs) {
             if (j.getState().equals("Waiting..")) {
