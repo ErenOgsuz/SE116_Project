@@ -7,154 +7,148 @@ public class JobReader {
         ArrayList<JobType> jobs = new ArrayList<JobType>();
         ArrayList<Task> jobTasks = new ArrayList<Task>();
 
-        String workFlowFilePath = filePath; // The path of work flow file
-
         int lineCount = 1;  // indicates the line read.
         String allLine = "";
         boolean isThereJob = false; // checks if any job is given
         boolean isThereTask = false; // checks if any task is given for the job
 
-        try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath))) {
-            String line = "";
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String line = "";
 
-            do{
-                line= br.readLine();
-                if(!line.contains("JOBTYPES")){
+        do {
+            line = br.readLine();
+            if (!line.contains("JOBTYPES")) {
+                lineCount++;
+            } else {
+                break;
+            }
+        } while (true);
+
+        while (true) { // Read line by line
+            line = br.readLine();
+
+            if (line.contains("STATIONS")) {
+                break;
+            }
+
+            String[] parts = line.split(" ");
+            for (int i = 0; i < parts.length; i++) {
+                parts[i] = parts[i].trim();
+                allLine = allLine.concat(parts[i]);
+            }
+
+            if (line.contains("JOBTYPES")) {
+                if (parts.length == 1) {
+                    allLine = allLine.concat(line);
                     lineCount++;
-                }else{
-                    break;
+                    continue;
                 }
-            }while(true);
+            } else if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) { // If line has J in it, it will start to create a Job object
+                isThereJob = true;
 
-            while (true) { // Read line by line
-                line = br.readLine();
-
-                if (line.contains("STATIONS")) {
-                    break;
-                }
-
-                String[] parts = line.split(" ");
-                for (int i= 0; i<parts.length; i++){
+                for (int i = 0; i < parts.length; i++) { // Clean the Strings from empty space and parentheses
                     parts[i] = parts[i].trim();
-                    allLine = allLine.concat(parts[i]);
+                    if (parts[i].contains(")")) {
+                        parts[i] = parts[i].substring(0, parts[i].length() - 1);
+                    }
+                    if (parts[i].contains("(")) {
+                        parts[i] = parts[i].substring(1);
+                    }
                 }
 
-                if (line.contains("JOBTYPES")) {
-                    if (parts.length == 1) {
-                        allLine = allLine.concat(line);
-                        lineCount++;
-                        continue;
-                    }
-                } else if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) { // If line has J in it, it will start to create a Job object
-                    isThereJob = true;
+                // Looks for every String in the line
+                if (parts[0].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) { // Is job given
+                    for (int j = 1; j < parts.length; j++) {
+                        if (parts[j].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) { // Looks for the tasks
+                            isThereTask = true;
+                            boolean taskExist = false;
+                            Task taskToAdd = new Task();
+                            for (Task task : Main.taskTypes) { // Checks if task exist
+                                if (task.getTaskTypeID().equals(parts[j])) {
+                                    taskExist = true;
 
-                    for (int i = 0; i < parts.length; i++) { // Clean the Strings from empty space and parentheses
-                        parts[i] = parts[i].trim();
-                        if (parts[i].contains(")")) {
-                            parts[i] = parts[i].substring(0, parts[i].length() - 1);
-                        }
-                        if (parts[i].contains("(")) {
-                            parts[i] = parts[i].substring(1);
-                        }
-                    }
-
-                    // Looks for every String in the line
-                    if (parts[0].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) { // Is job given
-                        for (int j = 1; j < parts.length; j++) {
-                            if (parts[j].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) { // Looks for the tasks
-                                isThereTask = true;
-                                boolean taskExist = false;
-                                Task taskToAdd = new Task();
-                                for (Task task : Main.taskTypes) { // Checks if task exist
-                                    if (task.getTaskTypeID().equals(parts[j])) {
-                                        taskExist = true;
-
-                                        if (j < parts.length - 1 && !parts[j + 1].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
-                                            if (task.getSize() == 0.0) { // Is task size given before
-                                                if (Double.parseDouble(parts[j + 1]) == 0.0) {
-                                                    noDefaultSize(lineCount, task.getTaskTypeID());
-                                                } else if (Double.parseDouble(parts[j + 1]) >= 0) {
-                                                    taskToAdd = new Task(parts[j]);
-                                                    taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
-                                                } else {
-                                                    incorrectDefaultSize(lineCount);
-                                                }
-                                            } else if (task.getSize() != Double.parseDouble(parts[j + 1])) { // Is task size and new task same
-                                                if (Double.parseDouble(parts[j + 1]) >= 0) {
-                                                    taskToAdd = new Task(parts[j]);
-                                                    taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
-                                                } else if (Double.parseDouble(parts[j + 1]) == 0.0) {
-                                                    taskToAdd = task;
-                                                } else if (Double.parseDouble(parts[j + 1]) < 0) {
-                                                    incorrectDefaultSize(lineCount);
-                                                }
-                                            } else { // Add task to Job
-                                                taskToAdd = task;
-                                            }
-                                        } else {
-                                            if (task.getSize() == 0.0) {
+                                    if (j < parts.length - 1 && !parts[j + 1].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+                                        if (task.getSize() == 0.0) { // Is task size given before
+                                            if (Double.parseDouble(parts[j + 1]) == 0.0) {
                                                 noDefaultSize(lineCount, task.getTaskTypeID());
+                                            } else if (Double.parseDouble(parts[j + 1]) >= 0) {
+                                                taskToAdd = new Task(parts[j]);
+                                                taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
                                             } else {
-                                                taskToAdd = task;
+                                                incorrectDefaultSize(lineCount, parts[j + 1]);
                                             }
+                                        } else if (task.getSize() != Double.parseDouble(parts[j + 1])) { // Is task size and new task same
+                                            if (Double.parseDouble(parts[j + 1]) >= 0) {
+                                                taskToAdd = new Task(parts[j]);
+                                                taskToAdd.setSize(Double.parseDouble(parts[j + 1]));
+                                            } else if (Double.parseDouble(parts[j + 1]) == 0.0) {
+                                                taskToAdd = task;
+                                            } else if (Double.parseDouble(parts[j + 1]) < 0) {
+                                                incorrectDefaultSize(lineCount, parts[j + 1]);
+                                            }
+                                        } else { // Add task to Job
+                                            taskToAdd = task;
+                                        }
+                                    } else {
+                                        if (task.getSize() == 0.0) {
+                                            noDefaultSize(lineCount, task.getTaskTypeID());
+                                        } else {
+                                            taskToAdd = task;
                                         }
                                     }
                                 }
-                                if (taskExist) {
-                                    jobTasks.add(taskToAdd);
-                                } else {
-                                    nonDeclaredTask(lineCount, parts[j]);
-                                }
                             }
-                        }
-                        if (isThereTask) { // If there is a task add it to Job
-                            boolean jobExist = false;
-                            for (JobType job : Main.jobTypes) { // Is this jobID given before
-                                if (job.getJobTypeID().equals(parts[0])) {
-                                    jobExist = true;
-                                    break;
-                                }
-                            }
-                            if (!jobExist) {
-                                Main.jobTypes.add(new JobType(parts[0], new ArrayList<Task>(jobTasks)));
-                                jobTasks.clear();
+                            if (taskExist) {
+                                jobTasks.add(taskToAdd);
                             } else {
-                                alreadyDeclaredJob(lineCount, parts[0]);
+                                nonDeclaredTask(lineCount, parts[j]);
                             }
-                        } else {
-                            noTask(lineCount); // Throws exception if there is no Task
                         }
-                        isThereTask = false;
                     }
+                    if (isThereTask) { // If there is a task add it to Job
+                        boolean jobExist = false;
+                        for (JobType job : Main.jobTypes) { // Is this jobID given before
+                            if (job.getJobTypeID().equals(parts[0])) {
+                                jobExist = true;
+                                break;
+                            }
+                        }
+                        if (!jobExist) {
+                            Main.jobTypes.add(new JobType(parts[0], new ArrayList<Task>(jobTasks)));
+                            jobTasks.clear();
+                        } else {
+                            alreadyDeclaredJob(lineCount, parts[0]);
+                        }
+                    } else {
+                        noTask(lineCount); // Throws exception if there is no Task
+                    }
+                    isThereTask = false;
                 }
-
-                lineCount++;
             }
 
-            if (!isThereJob) { // If no job given in JOBTYPE list
-                noJob();
-            }
-
-            if (!allLine.startsWith("(")) {
-                System.out.println(allLine);
-                controlBracket("(");
-            }
-            if (!allLine.endsWith("))")) {
-                controlBracket(")");
-            }
-
-            for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
-                System.out.print(job.getJobTypeID());
-                for (Task task : job.getTasks()) {
-                    System.out.print(", " + task.getTaskTypeID() + " Size:" + task.getSize() );
-                }
-                System.out.println();
-            }
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new Exception();
+            lineCount++;
         }
+
+        if (!isThereJob) { // If no job given in JOBTYPE list
+            noJob();
+        }
+
+        if (!allLine.startsWith("(")) {
+            System.out.println(allLine);
+            controlBracket("(");
+        }
+        if (!allLine.endsWith("))")) {
+            controlBracket(")");
+        }
+
+        for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
+            System.out.print(job.getJobTypeID());
+            for (Task task : job.getTasks()) {
+                System.out.print(", " + task.getTaskTypeID() + " Size:" + task.getSize());
+            }
+            System.out.println();
+        }
+
     }
 
     // All the Exceptions written below
@@ -179,8 +173,8 @@ public class JobReader {
         throw new Exception("Line " + lineCount + ": " + taskID + " has no default size, either a default size must be declared in TASKTYPE list or the size must be declared within the job.");
     }
 
-    public static void incorrectDefaultSize(int lineCount) throws Exception {
-        throw new Exception("Line " + lineCount + ": There is an invalid default size.");
+    public static void incorrectDefaultSize(int lineCount, String part) throws Exception {
+        throw new Exception("Line " + lineCount + ": " + part + " is an invalid default size.");
     }
 
     public static void noTask(int lineCount) throws Exception {

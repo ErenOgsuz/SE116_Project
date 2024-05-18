@@ -8,11 +8,10 @@ import java.util.Set;
 
 public class JobFileReader {
     public static void readJobsFromFile(String filepath) throws Exception{
-        String jobFilePath = filepath; // The path of Job file
         Set<String> jobIds = new HashSet<>();
         int lineNumber = 1;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(jobFilePath))) {
+        BufferedReader br = new BufferedReader(new FileReader(filepath));
             // Step 2: Read the file line by line
             String line;
             while ((line = br.readLine()) != null) {
@@ -80,15 +79,6 @@ public class JobFileReader {
                 lineNumber++;
             }
             System.out.println(".................................................\n");
-        }catch (NumberFormatException e){
-            System.err.printf("Semantic error on line %d: invalid input", lineNumber);
-            throw new Exception();
-
-        } catch (Exception e) {
-            System.err.println("Error reading file: " + e.getMessage());
-            throw new Exception();
-            // Handle the error appropriately
-        }
     }
 
     public static void syntaxError(int lineCount, String[] tokens) throws Exception{

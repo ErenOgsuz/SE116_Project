@@ -56,6 +56,10 @@ public abstract class Station {
         return sumDuration;
     }
 
+    public ArrayList<Task> getTasksCanDo() {
+        return tasksCanDo;
+    }
+
     public void setSumDuration(double sumDuration) {
         this.sumDuration = sumDuration;
     }

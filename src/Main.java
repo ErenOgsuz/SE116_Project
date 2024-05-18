@@ -69,13 +69,18 @@ public class Main {
                 EventFlow.eventFlow();
                 ReportGenerator.calculateAverageJobTardinessAndUtilization();
 
+            }catch (NumberFormatException e){
+                System.err.println("Semantic error, invalid input");
+
             }catch(Exception e){
-                System.out.println("An Error Occured");
+                System.err.println("Vital exception thrown while reading file!");
                 taskTypes.clear();
                 jobTypes.clear();
                 stationsTypes.clear();
                 jobs.clear();
                 events.clear();
+                e.printStackTrace();
+
             }finally {
                 System.out.println("Please write \"exit\" if you want to close program");
                 System.out.println("If you do not want to exit write anything else");

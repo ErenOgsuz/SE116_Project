@@ -4,94 +4,88 @@ import java.io.FileReader;
 public class TaskReader {
     public static void readTasks(String filePath) throws Exception{
 
-        String workFlowFilePath = filePath; // The path of work flow file
-
         int lineCount = 0;  // indicates the line read.
         int taskCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(workFlowFilePath))) {
-            String line = "";
-            String allLine="";
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String line = "";
+        String allLine = "";
 
-            while (true) {
-                line = br.readLine();
-                lineCount++;
+        while (true) {
+            line = br.readLine();
+            lineCount++;
 
-                if (line.contains("JOBTYPES")) {
-                    break;
-                }
+            if (line.contains("JOBTYPES")) {
+                break;
+            }
 
-                String[] parts =line.split(" ");
+            String[] parts = line.split(" ");
 
-                if(parts[parts.length-1].endsWith(")")){
-                    parts[parts.length-1] = parts[parts.length-1].substring(0,parts[parts.length-1].length()-1);
-                }
+            if (parts[parts.length - 1].endsWith(")")) {
+                parts[parts.length - 1] = parts[parts.length - 1].substring(0, parts[parts.length - 1].length() - 1);
+            }
 
-                allLine = allLine.concat(line);
+            allLine = allLine.concat(line);
 
-                for(int i=1; i< parts.length;i++) {
-                    if (!parts[i].contains("JOBTYPES")) {
-                        if(!parts[i].isEmpty()) {
-                            if (!parts[i].contains("TASKTYPES")) {
-                                if (parts[i].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
-                                    boolean exist = false;
-                                    for (int k = 0; k < Main.taskTypes.size(); ++k) {
-                                        if (Main.taskTypes.get(k).getTaskTypeID().equals(parts[i])) {
-                                            exist = true;
-                                        }
+            for (int i = 1; i < parts.length; i++) {
+                if (!parts[i].contains("JOBTYPES")) {
+                    if (!parts[i].isEmpty()) {
+                        if (!parts[i].contains("TASKTYPES")) {
+                            if (parts[i].matches("^[a-zA-Z][a-zA-Z0-9_]*$")) {
+                                boolean exist = false;
+                                for (int k = 0; k < Main.taskTypes.size(); ++k) {
+                                    if (Main.taskTypes.get(k).getTaskTypeID().equals(parts[i])) {
+                                        exist = true;
                                     }
-                                    if (!exist) {
-                                        Main.taskTypes.add(new Task(parts[i]));
-                                        taskCount++;
-                                    } else {
-                                        alreadyDeclaredTaskType(lineCount, parts[i]);
-                                    }
+                                }
+                                if (!exist) {
+                                    Main.taskTypes.add(new Task(parts[i]));
+                                    taskCount++;
+                                } else {
+                                    alreadyDeclaredTaskType(lineCount, parts[i]);
+                                }
 
-                                } else if (parts[i].matches("\\d+(\\.\\d+)?")) {
-                                    if (taskCount > 0) {
-                                        if (Main.taskTypes.get(taskCount - 1).getSize()==0.0) {
-                                            if (Double.parseDouble(parts[i]) >= 0.0) {
-                                                Main.taskTypes.get(taskCount - 1).setSize(Double.parseDouble(parts[i]));
-                                            } else {
-                                                incorrectDefaultSize(lineCount);
-                                            }
+                            } else if (parts[i].matches("\\d+(\\.\\d+)?")) {
+                                if (taskCount > 0) {
+                                    if (Main.taskTypes.get(taskCount - 1).getSize() == 0.0) {
+                                        if (Double.parseDouble(parts[i]) >= 0.0) {
+                                            Main.taskTypes.get(taskCount - 1).setSize(Double.parseDouble(parts[i]));
                                         } else {
-                                            noTask(lineCount);
+                                            incorrectDefaultSize(lineCount, parts[i]);
                                         }
                                     } else {
                                         noTask(lineCount);
                                     }
                                 } else {
-                                    incorrectTaskType(lineCount);
+                                    noTask(lineCount);
                                 }
+                            } else {
+                                incorrectTaskType(lineCount, parts[i]);
                             }
                         }
-                    } else {
-                        break;
                     }
+                } else {
+                    break;
                 }
             }
+        }
 
-            String[] parts=allLine.split(" ");
-            allLine= "";
+        String[] parts = allLine.split(" ");
+        allLine = "";
 
-            for(String part: parts){
-                part=part.trim();
-                allLine= allLine.concat(part);
-            }
-            if(!allLine.matches("^\\(.*")){
-                System.out.println(allLine);
-                controlBracket("(");
-            }else if(!allLine.endsWith(")")){
-                controlBracket(")");
-            }
+        for (String part : parts) {
+            part = part.trim();
+            allLine = allLine.concat(part);
+        }
+        if (!allLine.matches("^\\(.*")) {
+            System.out.println(allLine);
+            controlBracket("(");
+        } else if (!allLine.endsWith(")")) {
+            controlBracket(")");
+        }
 
-            for (int i = 0  ; i < Main.taskTypes.size(); i++) {
-                System.out.println(Main.taskTypes.get(i).getTaskTypeID()+ ", Size: "+Main.taskTypes.get(i).getSize() );
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            throw new Exception();
+        for (int i = 0; i < Main.taskTypes.size(); i++) {
+            System.out.println(Main.taskTypes.get(i).getTaskTypeID() + ", Size: " + Main.taskTypes.get(i).getSize());
         }
 
     }
@@ -102,17 +96,17 @@ public class TaskReader {
             throw new Exception("Line" + ": " + bracketType + ": There is no ')' after the last task type .");
         }
     }
-    public static void incorrectTaskType(int lineCount) throws Exception{
-        throw new Exception("Line" + lineCount + ": There is an invalid type of task.");
+    public static void incorrectTaskType(int lineCount, String task) throws Exception{
+        throw new Exception("Line" + lineCount + ": " + task + " is an invalid type of taskTypeID.");
     }
-    public static void incorrectDefaultSize(int lineCount) throws Exception{
-        throw new Exception("Line" + lineCount + ": There is an invalid default size.");
+    public static void incorrectDefaultSize(int lineCount, String task) throws Exception{
+        throw new Exception("Line" + lineCount + ": " + task + " has an invalid default size.");
     }
     public static void noTask(int lineCount) throws Exception{
         throw new Exception("Line" + lineCount + ": There is no task for a default size.");
     }
     public static void alreadyDeclaredTaskType(int lineCount,String task) throws Exception{
-        throw new Exception("Line"+ lineCount +": The "+ task +" already declared.");
+        throw new Exception("Line"+ lineCount +": "+ task +" already declared.");
     }
 
 }
