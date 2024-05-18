@@ -18,6 +18,8 @@ public class EventFlow {
             Main.events.add(new Event(job,job.getJobType(),job.getStartTime(),"JobStarting"));
         }
 
+        Main.events.add(new Event(0,"Simulation Start"));
+
         Collections.sort(Main.events, new Comparator<Event>() {
             @Override
             public int compare(Event e1, Event e2) {
@@ -38,7 +40,10 @@ public class EventFlow {
             System.out.println("Time is: "+currentTime+ " EventType: "+ nextEvent.getEventType());
 
             // if The nextEvent is triggering the job to start
-            if(nextEvent.getEventType().equals("JobStarting")) {
+            if(nextEvent.getEventType().equals("Simulation Start")){
+
+
+            }else if(nextEvent.getEventType().equals("JobStarting")) {
 
                 System.out.println(nextEvent.getJob().getJobId() + " has started!");
                 System.out.println("First task of "+nextEvent.getJob().getJobId()+"("+nextEvent.getJobType().getJobTypeID()+")"+" getting started");

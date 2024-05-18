@@ -22,6 +22,11 @@ public class Event {
         this.station=task.getStation();
     }
 
+    public Event(double time, String eventType){
+        this.deadLine = time;
+        this.eventType = eventType;
+    }
+
     public JobType getJobType() {
         return jobType;
     }
