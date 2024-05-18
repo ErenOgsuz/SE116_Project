@@ -87,7 +87,7 @@ public class TaskReader {
             }
 
             for (int i = 0  ; i < Main.taskTypes.size(); i++) {
-                System.out.println(Main.taskTypes.get(i).getTaskTypeID()+ " "+Main.taskTypes.get(i).getSize() );
+                System.out.println(Main.taskTypes.get(i).getTaskTypeID()+ ", Size: "+Main.taskTypes.get(i).getSize() );
             }
         } catch (Exception exception) {
             exception.printStackTrace();

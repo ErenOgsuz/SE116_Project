@@ -166,9 +166,9 @@ public class StationReader {
             }
 
             for (Station station : Main.stationsTypes) {
-                System.out.print(station.getStationID() + " ");
+                System.out.print(station.getStationID());
                 for (Task task : station.getTasks()) {
-                    System.out.print(task.getTaskTypeID() + " " + task.getPlusMinus() + " ");
+                    System.out.print(", " + task.getTaskTypeID() + " Plus/Minus:" + task.getPlusMinus());
                 }
                 System.out.println();
             }

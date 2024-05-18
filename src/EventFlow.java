@@ -32,12 +32,12 @@ public class EventFlow {
         int eventCount=0;
 
         do{
-            System.out.println("..................Event Block....................");
+            System.out.println("...................Event Block....................");
             nextEvent=Main.events.get(eventCount);
 
             currentTime=nextEvent.getDeadLine();
             // user will know current time
-            System.out.println("Time is: "+currentTime+ " EventType: "+ nextEvent.getEventType());
+            System.out.println("Time is: "+currentTime+ ", EventType: "+ nextEvent.getEventType());
 
             // if The nextEvent is triggering the job to start
             if(nextEvent.getEventType().equals("Simulation Start")){
@@ -84,7 +84,7 @@ public class EventFlow {
              // if the nextEvent is trigerring the task to finish
             }else if(nextEvent.getEventType().equals("TaskFinished")){
 
-                System.out.println(nextEvent.getTask().getTaskTypeID() +"("+nextEvent.getTask().getTaskTypeID()+"-"+nextEvent.getTask().getJob().getJobId()+")"+ " has finished!");
+                System.out.println(nextEvent.getTask().getTaskTypeID() +"("+nextEvent.getTask().getJobType().getJobTypeID()+"-"+nextEvent.getTask().getJob().getJobId()+")"+ " has finished!");
 
                 // the task's state and the executing task for the job of the task will rearrange
                 nextEvent.getTask().setStateDone();

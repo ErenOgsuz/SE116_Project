@@ -144,9 +144,9 @@ public class JobReader {
             }
 
             for (JobType job : Main.jobTypes) { // Prints jobs with their tasks
-                System.out.print(job.getJobTypeID() + " ");
+                System.out.print(job.getJobTypeID());
                 for (Task task : job.getTasks()) {
-                    System.out.print(task.getTaskTypeID() + " ");
+                    System.out.print(", " + task.getTaskTypeID() + " Size:" + task.getSize() );
                 }
                 System.out.println();
             }

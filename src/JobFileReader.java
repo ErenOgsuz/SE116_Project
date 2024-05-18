@@ -72,7 +72,7 @@ public class JobFileReader {
                 // Step 8: Calculate the job's deadline
                 int deadline = startTime + duration;
                 job.setDeadline(deadline);
-                System.out.println("Job ID: " + jobId + ", JobType ID:" + jobType.getJobTypeID() + " StartTime:"+startTime+ ", Deadline: " + deadline);
+                System.out.println("Job ID: " + jobId + ", JobType ID: " + jobType.getJobTypeID() + ", StartTime:"+startTime+ ", Deadline:" + deadline);
 
                 // Step 9: Add the Job object to the list
                 Main.jobs.add(job);

@@ -58,9 +58,13 @@ public class Main {
             }
 
             try {
+                System.out.println(".....................Tasks........................");
                 TaskReader.readTasks(workFlowFilePath);
+                System.out.println("....................JobTypes......................");
                 JobReader.readJobs(workFlowFilePath);
+                System.out.println("....................Stations......................");
                 StationReader.readStations(workFlowFilePath);
+                System.out.println("......................Jobs........................");
                 JobFileReader.readJobsFromFile(jobFilePath);
                 EventFlow.eventFlow();
                 ReportGenerator.calculateAverageJobTardinessAndUtilization();
