@@ -35,10 +35,6 @@ public class Event {
         return job;
     }
 
-    public void setJob(Job job) {
-        job = job;
-    }
-
     public Task getTask() {
         return task;
     }
@@ -54,19 +50,13 @@ public class Event {
     public void setStation(Station station) {
         this.station = station;
     }
+
     public double getDeadLine() {
         return deadLine;
-    }
-
-    public void setDeadLine(double deadLine) {
-        this.deadLine = deadLine;
     }
 
     public String getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
 }

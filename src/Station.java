@@ -46,15 +46,11 @@ public abstract class Station {
     public int getSpeed() {return speed;}
     public ArrayList<Task> getTasks() {return tasksCanDo;}
     public ArrayList<Task> getTargetTasks() {return targetTasks;}
-    public void setTargetTasks(ArrayList<Task> targetTasks) {this.targetTasks = targetTasks;}
     public int getMaxCapacity() {
         return maxCapacity;
     }
     public ArrayList<Task> getCurrentTasks() {
         return currentTasks;
-    }
-    public void setCurrentTasks(ArrayList<Task> currentTasks) {
-        this.currentTasks = currentTasks;
     }
     public double getSumDuration() {
         return sumDuration;

@@ -6,15 +6,15 @@ public class Task {
     private double size;
     private double speed = 1.0;
     private double plusMinus= 0.0;
-    private Station station; // it will assign at the taskSchedular.
+    private Station station; // it will assign at the taskScheduler.
     private double duration;
     private double startTime; // it will assign when the task picked
 
     private double finishTime; // it will assign when the task picked
     private String state;
 
-    private Job job; // it will assign in TaskSchedular to create event
-    private JobType jobType; // it will assign in TaskSchedular to create event
+    private Job job; // it will assign in TaskScheduler to create event
+    private JobType jobType; // it will assign in TaskScheduler to create event
 
     public Task(String taskTypeID){
         this.taskTypeID=taskTypeID;
@@ -41,9 +41,6 @@ public class Task {
     public String getTaskTypeID() {
         return taskTypeID;
     }
-    public void setTaskTypeID(String taskTypeID) {
-        this.taskTypeID = taskTypeID;
-    }
     public double getSize() {
         return size;
     }
@@ -59,9 +56,6 @@ public class Task {
     public void setStartTime(double startTime) {this.startTime = startTime;}
     public double getStarTime(){
         return  startTime;
-    }
-    public double getSpeed() {
-        return speed;
     }
     public void setSpeed(double speed) {
         this.speed = speed;
