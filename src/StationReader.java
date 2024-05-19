@@ -146,12 +146,12 @@ public class StationReader {
                         noTask(lineCount);
                     }
                     isThereTask = false;
-                } else {
-                    System.out.println("Call");
-                    stationIDisWrong(lineCount);
                 }
-
+            }else {
+                parts[0] = parts[0].substring(1);
+                stationIDisWrong(lineCount, parts[0]);
             }
+
             lineCount++;
 
         }
@@ -249,8 +249,8 @@ public class StationReader {
         throw new Exception("Line " + lineCount + ": There is no task given for job.");
     }
 
-    public static void stationIDisWrong(int lineCount) throws Exception {
-        throw new Exception("Line " + lineCount + ": StationID is written wrong, write \"S\" first then give number");
+    public static void stationIDisWrong(int lineCount, String s) throws Exception {
+        throw new Exception("Line " + lineCount + ": STATION " + s + " is written wrong, write a letter first then give number");
     }
 
     public static void invalidPlusMinus(int lineCount) throws Exception {

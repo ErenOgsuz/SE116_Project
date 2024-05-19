@@ -124,7 +124,11 @@ public class JobReader {
                     }
                     isThereTask = false;
                 }
+            }else{
+                parts[0] = parts[0].substring(1);
+                jobIDisWrong(lineCount, parts[0]);
             }
+
 
             lineCount++;
         }
@@ -185,7 +189,7 @@ public class JobReader {
         throw new Exception("No job is given for JOBTYPE.");
     }
 
-    public static void jobIDisWrong(int lineCount) throws Exception {
-        throw new Exception("Line " + lineCount + ": JobID is written wrong, write a letter first");
+    public static void jobIDisWrong(int lineCount, String s) throws Exception {
+        throw new Exception("Line " + lineCount + ": JOBTYPE " + s + " is written wrong, write a letter first");
     }
 }
