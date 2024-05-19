@@ -91,17 +91,6 @@ public class Job {
         this.finishTime = finishTime;
     }
 
-    public void setExecutingTask(){
-        for(Task task:jobType.getTasks()){
-            if(task.getState().contains("Executing..")){
-                executingTask=task;
-                break;
-            }
-            else {
-                executingTask = jobType.getTasks().get(0);
-            }
-        }
-    }
     public Task getExecutingTask(){
         for (Task t: this.jobType.getTasks()) {
             if (t.getState().equals("Executing..")) {
@@ -109,17 +98,6 @@ public class Job {
             }
         }
         return executingTask;
-    }
-
-    public void setWaitingToExecute(){
-        int size = jobType.getTasks().size();
-        for (int i = 0; i < size; i++) {
-            Task task = jobType.getTasks().get(i);
-            if (task.getState().contains("Executing..")) {
-                waitingToExecute =jobType.getTasks().get(i+1) ;
-                break;
-            }
-        }
     }
 
     public Task getWaitingToExecute(){
@@ -134,15 +112,4 @@ public class Job {
         return delayTime;
     }
 
-    public void isJobExecuting(ArrayList<Job> jobs) {
-        for (Job j: jobs) {
-            if (j.getState().equals("Waiting..")) {
-                System.out.println("Job " + j.getJobId() + " is waiting to be executed.");
-                if (jobs.indexOf(j) - 1 >= 0) System.out.println("Previous job " + jobs.get(jobs.indexOf(j) - 1).getJobId() + "is executed.");
-            }
-            else if (j.getState().equals("Executing..")) {
-                System.out.println("Job " + j.getJobId() + "is being executed.");
-            }
-        }
-    }
 }

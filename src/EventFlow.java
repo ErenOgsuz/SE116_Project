@@ -15,7 +15,7 @@ public class EventFlow {
         // create the events to trigger start the jobs..
         for(Job job :Main.jobs){
             //Job job1 = new Job(job.getJobId(),job.getJobType(),job.getStartTime(),job.getDuration());
-            Main.events.add(new Event(job,job.getJobType(),job.getStartTime(),"JobStarting"));
+            Main.events.add(new Event(job,job.getStartTime(),"JobStarting"));
         }
 
         Main.events.add(new Event(0,"Simulation Start"));
@@ -102,7 +102,7 @@ public class EventFlow {
                 if(nextEvent.getTask().getJobType().getTaskIndex()<nextEvent.getTask().getJobType().getTasks().size()){
                     TaskScheduler.findSuitableStation(nextEvent.getTask().getJobType().getTasks().get(nextEvent.getTask().getJobType().getTaskIndex()), nextEvent.getDeadLine());
                 }else{
-                    Main.events.add(new Event(nextEvent.getTask().getJob(),nextEvent.getTask().getJob().getJobType(),nextEvent.getDeadLine(),"JobFinished"));
+                    Main.events.add(new Event(nextEvent.getTask().getJob(),nextEvent.getDeadLine(),"JobFinished"));
                 }
             }
 

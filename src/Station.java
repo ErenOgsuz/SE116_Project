@@ -39,6 +39,7 @@ public abstract class Station {
     public void setCurrentTaskNo(int currenttask) {
         this.currenttaskno = currenttask;
     }
+
     public int getCurrentTaskNo() {
         return currenttaskno;
     }
@@ -52,20 +53,15 @@ public abstract class Station {
     public ArrayList<Task> getCurrentTasks() {
         return currentTasks;
     }
-    public double getSumDuration() {
-        return sumDuration;
-    }
-
     public ArrayList<Task> getTasksCanDo() {
         return tasksCanDo;
     }
-
+    public double getSumDuration() {
+        return sumDuration;
+    }
     public void setSumDuration(double sumDuration) {
         this.sumDuration = sumDuration;
     }
-
-    // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
-    public abstract void addTask(Task task) ;
 
     public void displayState(){
         if(currentTasks.isEmpty()){
@@ -82,9 +78,6 @@ public abstract class Station {
             }
         }
     }
-
-    public abstract boolean pickTask(double startTime);
-    public abstract double calculateFinishTime(Task task, double currentTime);
 
     // to check the taskType can handle the taskType
     public boolean canExecuteTaskType(String taskType) {
@@ -113,4 +106,10 @@ public abstract class Station {
     public double calculateOptimalDuration(Task task){
         return task.getSize()/getSpeed();
     }
+
+    // addTask for assign the task to station and set the task's job,jobType to create event when it started the executing
+    public abstract void addTask(Task task) ;
+    public abstract boolean pickTask(double startTime);
+    public abstract double calculateFinishTime(Task task, double currentTime);
+    
 }

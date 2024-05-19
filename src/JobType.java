@@ -10,6 +10,8 @@ public class JobType {
         this.tasks = tasks;
     }
 
+    public JobType(){}
+
     public int getTaskIndex() {
         return taskIndex;
     }
@@ -26,5 +28,4 @@ public class JobType {
         return tasks;
     }
 
-    public JobType(){}
 }

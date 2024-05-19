@@ -8,11 +8,11 @@ public class Event {
     private JobType jobType;
     private Task task;
 
-    public Event(Job job,JobType jobType,double time, String eventType){
+    public Event(Job job, double time, String eventType){
             this.eventType=eventType;
             this.job=job;
             this.deadLine=time;
-            this.jobType = jobType;
+            this.jobType = job.getJobType();
     }
 
     public Event(Task task, double time, String eventType){
@@ -39,16 +39,8 @@ public class Event {
         return task;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
-    }
-
     public Station getStation() {
         return station;
-    }
-
-    public void setStation(Station station) {
-        this.station = station;
     }
 
     public double getDeadLine() {

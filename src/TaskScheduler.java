@@ -3,16 +3,6 @@ import java.util.Random;
 import java.util.ArrayList;
 
 public class TaskScheduler {
-    private Task task;
-    private List<JobType> jobTypes;
-    private List<Station> stations;
-    private int roundRobinIndex = 0; // For round-robin station selection
-    private static Random random = new Random();
-
-    public TaskScheduler(Task task) {
-        this.task=task;
-    }
-
     public static Station findSuitableStation(Task task,double currentTime) {
         List<Station> suitableStations = new ArrayList<>();
 
@@ -24,7 +14,7 @@ public class TaskScheduler {
             }
         }
 
-        ArrayList<Double> possibleTimes= new ArrayList<Double>();
+        //ArrayList<Double> possibleTimes= new ArrayList<Double>();
 
         Station correctStation=suitableStations.get(0);
 
@@ -36,6 +26,7 @@ public class TaskScheduler {
                 correctStation=station;
             }
         }
+
         System.out.println("The "+task.getTaskTypeID()+" of "+task.getJob().getJobId()+" ("+task.getJob().getJobType().getJobTypeID()+") will approximately finish at "+finishTime+".");
         task.setStation(correctStation); // Here, we set the task's station
         correctStation.addTask(task); // Add task to stations targetTasks
