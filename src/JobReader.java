@@ -43,7 +43,8 @@ public class JobReader {
                     lineCount++;
                     continue;
                 }
-            } else if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) { // If line has J in it, it will start to create a Job object
+            // If line has a letter at the beginning, it will start to create a JobType object
+            } else if (parts[0].matches("^\\([a-zA-Z][a-zA-Z0-9_]*$")) {
                 isThereJob = true;
 
                 for (int i = 0; i < parts.length; i++) { // Clean the Strings from empty space and parentheses
@@ -124,9 +125,11 @@ public class JobReader {
                     }
                     isThereTask = false;
                 }
-            }else{
+            }else if (parts[0].matches("\\(\\d[a-zA-Z0-9_]*$")) {
                 parts[0] = parts[0].substring(1);
                 jobIDisWrong(lineCount, parts[0]);
+            }else {
+                jobHasNoBracket(lineCount, parts[0]);
             }
 
 
@@ -191,5 +194,9 @@ public class JobReader {
 
     public static void jobIDisWrong(int lineCount, String s) throws Exception {
         throw new Exception("Line " + lineCount + ": JOBTYPE " + s + " is written wrong, write a letter first");
+    }
+
+    public static void jobHasNoBracket(int lineCount, String s) throws Exception {
+        throw new Exception("Line " + lineCount + ": JOBTYPE " + s + " is written wrong, write \"(\" first then give JobTypeID");
     }
 }

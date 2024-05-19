@@ -147,9 +147,11 @@ public class StationReader {
                     }
                     isThereTask = false;
                 }
-            }else {
+            }else if (parts[0].matches("\\(\\d[a-zA-Z0-9_]*$")) {
                 parts[0] = parts[0].substring(1);
                 stationIDisWrong(lineCount, parts[0]);
+            }else {
+                stationHasNoBracket(lineCount, parts[0]);
             }
 
             lineCount++;
@@ -251,6 +253,10 @@ public class StationReader {
 
     public static void stationIDisWrong(int lineCount, String s) throws Exception {
         throw new Exception("Line " + lineCount + ": STATION " + s + " is written wrong, write a letter first then give number");
+    }
+
+    public static void stationHasNoBracket(int lineCount, String s) throws Exception {
+        throw new Exception("Line " + lineCount + ": STATION " + s + " is written wrong, write \"(\" first then give StationID");
     }
 
     public static void invalidPlusMinus(int lineCount) throws Exception {
