@@ -204,10 +204,10 @@ public class StationReader {
 
         if (!allLine.startsWith("(")) {
             System.out.println(allLine);
-            controlBracket("(");
+            controlBracket("(", lineCount);
         }
         if (!allLine.endsWith("))")) {
-            controlBracket(")");
+            controlBracket(")", lineCount);
         }
 
         for (Station station : Main.stationsTypes) {
@@ -225,7 +225,7 @@ public class StationReader {
             }*/
     }
 
-    public static void controlBracket(String bracketType) throws Exception {
+    public static void controlBracket(String bracketType, int lineCount) throws Exception {
         if (bracketType.equals("(")) {
             throw new Exception("There is no '(' at correct place. ");
         } else if (bracketType.equals(")")) {

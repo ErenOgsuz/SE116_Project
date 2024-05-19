@@ -79,9 +79,9 @@ public class TaskReader {
         }
         if (!allLine.matches("^\\(.*")) {
             System.out.println(allLine);
-            controlBracket("(");
+            controlBracket("(",lineCount);
         } else if (!allLine.endsWith(")")) {
-            controlBracket(")");
+            controlBracket(")",lineCount);
         }
 
         for (int i = 0; i < Main.taskTypes.size(); i++) {
@@ -89,11 +89,11 @@ public class TaskReader {
         }
 
     }
-    public static void controlBracket(String bracketType) throws  Exception {
+    public static void controlBracket(String bracketType, int lineCount) throws  Exception {
         if(bracketType.equals("(")) {
-            throw new Exception("Line" + ": " + bracketType + ": There is no '(' before the 'TASKTYPES' .");
+            throw new Exception("Line" + ": " + lineCount + ": There is no '(' before the 'TASKTYPES' .");
         }else{
-            throw new Exception("Line" + ": " + bracketType + ": There is no ')' after the last task type .");
+            throw new Exception("Line" + ": " + lineCount + ": There is no ')' after the last task type .");
         }
     }
     public static void incorrectTaskType(int lineCount, String task) throws Exception{
